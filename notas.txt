@@ -1,0 +1,50 @@
+-webkit-linear-gradient(top, rgba(216,225,231,1) 35%, rgba(216,225,231,1) 36%, rgba(233,238,242,1) 75%, rgba(242,246,248,1) 98%, rgba(181,198,208,1) 99%, rgba(224,239,249,1) 100%);
+
+*crear: (usuarios)
+    usuarios permitidos en el inicio de sesion (solamnete se valida si existe el nombre de usuario) ->
+        src\utils\validate.js
+        pruebas -> se prueba la funcion de enviar y cargar los nombres de usuarios desde localstorage
+    tokens de autenticacion y asociar usuarios con token (asignar: rol | introduction | avatar(revisar como cargar imagen desde local) | name) ->
+        mock\user.js
+    adicionar roles de usuario para renderizarlos en la vista --> src\views\permission\role.vue ->
+        mock\role\index.js
+    rutas de vistas y/o permitir asociar vistas a los roles de usuario ->
+        src\router\index.js
+    archivo que permite manejar las conexiones con el API REST
+        src\utils\request.js
+
+*cambiar | modificar:
+    logo -> 
+        src/layout/components/sidebar/Logo.vue
+    texto logo -> 
+        src/layout/components/sidebar/Logo.vue
+    opciones panel lateral derecho ->
+        src/settings.js
+    tablero inicial (dashboard) roles ->
+        src\views\dashboard\editor\index.vue
+    login ->
+        src\views\login\index.vue
+    opciones menu desplegable de usuario (perfil, imagen de usuario, salir) | opcines de busqueda y ampliar a pantalla completa ->
+        src\layout\components\Navbar.vue
+    visualizacion de dashboard principal segun el rol que inicia sesión) ->
+        src\views\dashboard\index.vue
+    el texto del 'menu desplegable' de las pestañas abiertas recientemente
+        src\layout\components\TagsView\index.vue
+    internacionalización agregar un diccionario al correspondiente script (Teniendo en cuenta el identificador del diccionario):
+        src\lang\es.js <- español
+        src\lang\en.js <- ingles
+    el texto de la raiz del menu (rutas)
+        src\components\Breadcrumb\index.vue
+    
+*asociar:
+    rutas de vistas a un nombre especifico que permita redireccionar facil a una vista ->
+        /mock/role/route.js
+    que rol puede ver todas las vistas
+        src\store\modules\permission.js
+
+
+*Frontend\src\store\modules\user.js -> archivo donde se envian a variables de session los datos del usuario
+*Frontend\mock\user.js -> archivo que utiliza la plantilla para simular como si recibiera de un API los datos del cliente (MOCK)
+                       -> se comentan los metodos de este archivo para permitir consumir los datos del API de python
+*Frontend\src\utils\validate.js -> archivo que permite validar los usuarios registrados en la base de datos al momento del login
+*Frontend\src\api\user.js -> archivo donde se realizan las solicitudes HTTP al servidor python
