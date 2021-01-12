@@ -6,7 +6,7 @@
 
     <div v-loading="loading" style="padding-left: 5%; padding-right: 5%;">
       <el-card v-for="user in datosUsuarios" :key="user.idusuario" style="margin-bottom: 3%;">
-        <el-row style="border-bottom: 1px solid #DCDFE6; padding-bottom: 3%;">
+        <el-row class="border-card">
           <el-col :span="6" :xs="24" style="border: 0px solid red; text-align: center;">
             <el-avatar :size="60">
               <img
@@ -14,15 +14,15 @@
               >
             </el-avatar>
           </el-col>
-          <el-col :span="12" :xs="24" style="padding-top: 3%; padding-left: 4%; border: 0px solid red;">
+          <el-col :span="12" :xs="24" class="data-user">
             <span style="color: #303133;"><b>{{ user.nombre + ' ' + user.apellido }}</b></span><br>
             <span style="font-size: small; color: #909399;"><b>{{ user.privilegio }}</b></span>
           </el-col>
-          <el-col :span="3" :xs="24" style="padding-top: 5%; border: 0px solid red; text-align: center;">
-            <el-button type="danger" plain size="mini" icon="el-icon-delete" @click="confirmDeleteUser(user)" />
-          </el-col>
-          <el-col :span="3" :xs="24" style="padding-top: 5%; border: 0px solid red; text-align: center;">
+          <el-col :span="3" :xs="12" class="btn-user-success">
             <el-button style="border: 1px solid #67C23A;" type="success" plain size="mini" icon="el-icon-top-right" @click="returnUser(user)" />
+          </el-col>
+          <el-col :span="3" :xs="12" class="btn-user-delete">
+            <el-button type="danger" plain size="mini" icon="el-icon-delete" @click="confirmDeleteUser(user)" />
           </el-col>
         </el-row>
       </el-card>
@@ -33,20 +33,19 @@
     <el-dialog
       title="Advertencia"
       :visible.sync="deleteDialogVisible"
-      width="40%"
       center
-      custom-class="dialog-class-lista"
+      :width="x.matches ? '80%' : '40%'"
     >
-      <br>
-      <center>
-        <span>¿Realmente desea eliminar el usuario <b>{{ usuario }}</b>?</span>
-      </center>
-      <span slot="footer" class="dialog-footer">
+      <el-row>
+        <el-col :xs="24">
+          <center>
+            <span>¿Realmente desea eliminar el usuario <b>{{ usuario }}</b>?</span>
+          </center>
+        </el-col>
+      </el-row>
+      <span slot="footer">
         <el-button @click="deleteDialogVisible = false">Cancelar</el-button>
-        <el-button
-          type="primary"
-          @click="borrarUsuario"
-        >Confirmar</el-button>
+        <el-button type="primary" @click="borrarUsuario">Confirmar</el-button>
       </span>
     </el-dialog>
   </el-card>
@@ -73,7 +72,8 @@ export default {
       loading: true,
       deleteDialogVisible: false,
       idusuario: '',
-      usuario: ''
+      usuario: '',
+      x: ''
     }
   },
   computed: {
@@ -100,6 +100,7 @@ export default {
   },
   async created() {
     await this.initView()
+    this.x = window.matchMedia('(max-width: 800px)')
   },
   methods: {
     async getNicknames() {
@@ -178,111 +179,37 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-.panel-group {
-  margin-top: 18px;
-
-  .card-panel-col {
-    margin-bottom: 32px;
+// Pantallas superiores a 800px (PC)
+@media screen and (min-width: 800px) {
+  .data-user {
+    padding-top: 3%; padding-left: 4%; border: 0px solid red;
   }
 
-  .card-panel {
-    height: 108px;
-    cursor: pointer;
-    font-size: 12px;
-    position: relative;
-    overflow: hidden;
-    color: #666;
-    background: #fff;
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.05);
+  .border-card {
+    border-bottom: 1px solid #DCDFE6; padding-bottom: 3%;
+  }
 
-    &:hover {
-      .card-panel-icon-wrapper {
-        color: #fff;
-      }
+  .btn-user-success {
+    padding-top: 5%; border: 0px solid red; text-align: center;
+  }
 
-      .icon-people {
-        background: #40c9c6;
-      }
-
-      .icon-message {
-        background: #36a3f7;
-      }
-
-      .icon-money {
-        background: #f4516c;
-      }
-
-      .icon-shopping {
-        background: #34bfa3;
-      }
-    }
-
-    .icon-people {
-      color: #40c9c6;
-    }
-
-    .icon-message {
-      color: #36a3f7;
-    }
-
-    .icon-money {
-      color: #f4516c;
-    }
-
-    .icon-shopping {
-      color: #34bfa3;
-    }
-
-    .card-panel-icon-wrapper {
-      float: left;
-      margin: 14px 0 0 14px;
-      padding: 16px;
-      transition: all 0.38s ease-out;
-      border-radius: 6px;
-    }
-
-    .card-panel-icon {
-      float: left;
-      font-size: 48px;
-    }
-
-    .card-panel-description {
-      float: right;
-      font-weight: bold;
-      margin: 26px;
-      margin-left: 0px;
-
-      .card-panel-text {
-        line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 16px;
-        margin-bottom: 12px;
-      }
-
-      .card-panel-num {
-        font-size: 20px;
-      }
-    }
+  .btn-user-delete {
+    padding-top: 5%; border: 0px solid red; text-align: center;
   }
 }
 
-@media (max-width: 550px) {
-  .card-panel-description {
-    display: none;
+// Pantallas inferiores a 800px (mobile)
+@media screen and (max-width: 800px) {
+  .data-user {
+    text-align: center;
   }
 
-  .card-panel-icon-wrapper {
-    float: none !important;
-    width: 100%;
-    height: 100%;
-    margin: 0 !important;
+  .btn-user-success {
+    padding-top: 5%; text-align: right; padding-right: 5%;
+  }
 
-    .svg-icon {
-      display: block;
-      margin: 14px auto !important;
-      float: none !important;
-    }
+  .btn-user-delete {
+    padding-top: 5%; text-align: left; padding-left: 5%;
   }
 }
 </style>

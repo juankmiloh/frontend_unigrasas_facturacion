@@ -5,29 +5,32 @@
         <sticky class-name="sub-navbar">
           <div style="text-align: center; color: white">
             <el-row>
-              <el-col :span="20" style="padding-left: 15%;">
+              <el-col :span="20" :xs="11" class="header-factura">
                 <label style="font-size: x-large">Factura N° {{ id }}</label>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="4" :xs="13">
                 <!-- Div Botones -->
                 <el-button
+                  v-show="showElements"
                   style="border: 2px solid #67c23a"
                   size="medium"
                   icon="el-icon-printer"
                   @click="fetchData()"
                 >Imprimir</el-button>
                 <el-button
+                  v-show="showElements"
                   style="border: 1px solid #67c23a"
                   type="warning"
                   size="medium"
                   @click="closeWindow()"
-                >Cerrar</el-button>
+                >{{ btnClose() }}</el-button>
               </el-col>
             </el-row>
           </div>
         </sticky>
       </div>
     </el-collapse-transition>
+    <br>
     <div
       v-loading.fullscreen.lock="fullscreenLoading"
       class="main-article"
@@ -161,7 +164,7 @@
         </el-row>
         <!-- items -->
         <el-row style="margin-top: 2.5%;">
-          <el-col :span="24" class="wrapper" style="height: 50vh;">
+          <el-col :span="24" class="wrapper" :style="x.matches ? 'height: 25em;' : 'height: 33em;'">
             <table class="table-items">
               <tr class="items-th">
                 <th># </th>
@@ -254,10 +257,12 @@ export default {
       showElements: true,
       dataFactura: {},
       dataItems: [],
-      loading: false
+      loading: false,
+      x: ''
     }
   },
   async mounted() {
+    this.x = window.matchMedia('(max-width: 800px)')
     this.loading = true
     this.id = this.$route.params.id
     await this.getDataFactura()
@@ -266,6 +271,13 @@ export default {
     // console.log('Imprimir factura -> ', this.id)
   },
   methods: {
+    btnClose() {
+      if (this.x.matches) {
+        return 'X'
+      } else {
+        return 'Cerrar'
+      }
+    },
     convertNumberToLetters(val) {
       const letras = numeroALetras(val, {
         plural: 'PESOS',
@@ -289,7 +301,13 @@ export default {
           this.fullscreenLoading = false
           this.$nextTick(() => {
             window.print()
-            this.showElements = true
+            if (this.x.matches) {
+              setTimeout(() => {
+                this.showElements = true
+              }, 10000)
+            } else {
+              this.showElements = true
+            }
           })
         }, 500)
       })
@@ -395,5 +413,17 @@ export default {
 .items-td-null td {
   border: 1px solid black;
   height: 50vh;
+}
+
+// Pantallas superiores a 800px (PC)
+@media screen and (min-width: 800px) {
+  .header-factura {
+    padding-left: 15%;
+  }
+}
+
+// Pantallas inferiores a 800px (mobile)
+@media screen and (max-width: 800px) {
+
 }
 </style>

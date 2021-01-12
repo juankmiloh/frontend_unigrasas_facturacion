@@ -4,27 +4,32 @@ export const CONSTANTS = {
     tableColumnsItems: [{
             label: 'Código',
             prop: 'coditem',
-            width: 94
+            width: 94,
+            width_xs: 100
         },
         {
             label: 'Producto',
             prop: 'item',
-            width: 235
+            width: 235,
+            width_xs: 200
         },
         {
             label: 'Cantidad',
             prop: 'cantidad',
             // width: 110
+            width_xs: 110
         },
         {
             label: 'Precio',
             prop: 'precio',
             // width: 98
+            width_xs: 110
         },
         {
             label: 'Valor',
             prop: 'total',
             // width: 110
+            width_xs: 150
         }
     ],
     formItem: {
@@ -40,7 +45,7 @@ export const CONSTANTS = {
             placeholder: 'Seleccione un producto'
         },
         {
-            type: 'decimal',
+            type: 'number',
             prop: 'cantidad',
             label: 'Cantidad',
             placeholder: 'Ingrese cantidad de producto'

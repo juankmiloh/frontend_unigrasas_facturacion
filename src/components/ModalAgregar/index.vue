@@ -3,7 +3,8 @@
     v-el-drag-dialog
     :visible.sync="modalvisible"
     :before-close="handleCancel"
-    width="40%"
+    :width="x.matches ? '' : '40%'"
+    :fullscreen="x.matches ? true : false"
     center
     custom-class="dialog-class"
     :show-close="false"
@@ -25,6 +26,7 @@
         :model="model"
         :rules="rulesform"
         label-width="120px"
+        :label-position="x.matches ? 'top' : ''"
         class="demo-ruleForm"
       >
         <el-form-item v-for="component in domcomponents" :key="component.prop" :label="component.label" :prop="component.prop">
@@ -102,6 +104,7 @@
           <el-button @click="handleCancel()">Cancelar</el-button>
           <el-button
             type="success"
+            :loading="loading"
             @click="handleForm('modalform')"
           >{{ action }}</el-button>
         </el-form-item>
@@ -150,7 +153,9 @@ export default {
   },
   data() {
     return {
-      model: {}
+      model: {},
+      x: '',
+      loading: false
     }
   },
   watch: {
@@ -158,11 +163,13 @@ export default {
       deep: true,
       handler(val) {
         this.model = val
+        this.loading = false
       }
     }
   },
   created() {
     this.model = {}
+    this.x = window.matchMedia('(max-width: 800px)')
   },
   methods: {
     async handleForm(formName) {
@@ -170,6 +177,7 @@ export default {
         if (valid) {
           // Devolvemos el object del form y cerramos el dialogo
           // console.log('MODELO -> ', this.modalform)
+          this.loading = true
           this.$emit('confirmar', { response: true, action: this.action, data: this.modalform })
         } else {
           console.log('error submit!!')
@@ -188,17 +196,38 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.control-modal {
-  width: 85%;
-}
+
 </style>
 
 <style lang="scss">
-.dialog-class {
-  border-radius: 10px;
+
+// Pantallas superiores a 800px (PC)
+@media screen and (min-width: 800px) {
+  .dialog-class {
+    border-radius: 10px;
+  }
+
+  .dialog-class .el-dialog__body {
+    padding-top: 0 !important;
+  }
+
+  .control-modal {
+    width: 85%;
+  }
 }
 
-.dialog-class .el-dialog__body {
-  padding-top: 0 !important;
+// Pantallas inferiores a 800px (mobile)
+@media screen and (max-width: 800px) {
+  .dialog-class .el-dialog__body {
+    padding: 0 !important;
+  }
+
+  .dialog-class .el-dialog__header {
+    display: none;
+  }
+
+  .control-modal {
+    width: 95%;
+  }
 }
 </style>

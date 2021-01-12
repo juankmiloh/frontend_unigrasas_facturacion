@@ -22,7 +22,7 @@
             :label="column.label"
             :prop="column.prop"
             align="center"
-            :width="column.width"
+            :width="x.matches ? column.width_xs : column.width"
             sortable
           >
             <template slot-scope="scope">
@@ -129,7 +129,8 @@ export default {
       dataFormItem: {},
       modalAction: '',
       listaProductos: [],
-      delItem: {}
+      delItem: {},
+      x: ''
     }
   },
   watch: {
@@ -145,6 +146,7 @@ export default {
   async created() {
     await this.getFacturaItems()
     this.getItems()
+    this.x = window.matchMedia('(max-width: 800px)')
   },
   async mounted() {
     this.formItem = {}
@@ -201,9 +203,9 @@ export default {
         this.loading = false
       } else {
         this.formItem = {}
+        this.dialogVisibleItem = false
         await this.getFacturaItems()
         this.getItems()
-        this.dialogVisibleItem = false
       }
     },
     async submitDelete(confirm) {

@@ -4,9 +4,8 @@
     :title="titulo"
     :visible.sync="modalvisible"
     :before-close="handleCancel"
-    width="40%"
+    :width="x.matches ? '80%' : '40%'"
     center
-    custom-class="dialog-class-lista"
   >
     <center>
       <span v-html="mensaje" />
@@ -40,6 +39,14 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  data() {
+    return {
+      x: ''
+    }
+  },
+  created() {
+    this.x = window.matchMedia('(max-width: 800px)')
   },
   methods: {
     handleCancel() {

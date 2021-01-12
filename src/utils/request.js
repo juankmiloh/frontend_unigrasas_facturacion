@@ -2,12 +2,12 @@
 /* eslint-disable */
 import axios from 'axios';
 import { Message } from 'element-ui';
-import store from '@/store';
-import { getToken } from '@/utils/auth';
+// import store from '@/store';
+// import { getToken } from '@/utils/auth';
 
 // create an axios instance
 const service = axios.create({
-    baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url //servicio url
+    baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
     withCredentials: true, // send cookies when cross-domain requests
     timeout: 5000 // request timeout
 });
@@ -15,9 +15,10 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
     config => {
-        if (store.getters.token) {
-            config.headers['X-Token'] = getToken();
-        }
+        // if (store.getters.token) {
+        //     config.headers['X-Token'] = getToken();
+        // }
+        // console.log('config -> ', config);
         return config;
     },
     error => {
@@ -30,6 +31,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         const res = JSON.parse(JSON.stringify(response.data));
+        // console.log('response axios -> ', response);
         return res;
     },
     error => {

@@ -36,7 +36,7 @@
             :label="column.label"
             :prop="column.prop"
             align="center"
-            :width="column.width"
+            :width="x.matches ? column.width_xs : column.width"
             sortable
           >
             <template slot-scope="scope">
@@ -138,12 +138,14 @@ export default {
       modalAction: '',
       listaProductos: [],
       delItem: {},
-      busquedaCliente: ''
+      busquedaCliente: '',
+      x: ''
     }
   },
   async created() {
     this.loading = true
     await this.getClientes()
+    this.x = window.matchMedia('(max-width: 800px)')
   },
   async mounted() {
     this.formItem = {}

@@ -32,7 +32,8 @@
       v-el-drag-dialog
       :visible.sync="msgAgregarVisible"
       :before-close="closeModalAgregar"
-      width="34em"
+      :width="x.matches ? '' : '34em'"
+      :fullscreen="x.matches ? true : false"
       custom-class="dialog-class-lista"
       :show-close="false"
     >
@@ -50,6 +51,7 @@
           :model="formAgregar"
           :rules="rulesFormProceso"
           label-width="120px"
+          :label-position="x.matches ? 'top' : ''"
           class="demo-ruleForm"
         >
           <!-- <el-form-item label="Numeración" prop="idfactura">
@@ -93,7 +95,7 @@
               v-model="formAgregar.f_emision"
               type="datetime"
               placeholder="Seleccione una fecha"
-              class="control-modal"
+              :style="x.matches ? 'width: 95%;' : 'width: 25em;'"
             />
           </el-form-item>
           <el-form-item label="Vendedor" prop="usuario">
@@ -133,7 +135,8 @@
     <el-dialog
       v-el-drag-dialog
       :visible.sync="msgUsuarioVisible"
-      width="35em"
+      :width="x.matches ? '' : '35em'"
+      :fullscreen="x.matches ? true : false"
       custom-class="dialog-class-lista"
       center
       :show-close="false"
@@ -147,7 +150,7 @@
         class="createPost-container"
         style="padding-top: 35px; padding-bottom: 5px; padding-left: 20px"
       >
-        <el-form :model="formUsuario" label-width="120px" class="demo-ruleForm">
+        <el-form :model="formUsuario" label-width="120px" :label-position="x.matches ? 'top' : ''" class="demo-ruleForm">
           <el-form-item label="Factura">
             <el-input
               v-model="formUsuario.idfactura"
@@ -179,6 +182,7 @@
             <el-button @click="msgUsuarioVisible = false">Cancelar</el-button>
             <el-button
               type="success"
+              :loading="loading"
               @click="asignarUsuario()"
             >Asignar</el-button>
           </el-form-item>
@@ -237,7 +241,7 @@
             :label="column.label"
             :prop="column.prop"
             align="center"
-            :width="column.width"
+            :width="x.matches ? column.width_xs : column.width"
             sortable
             :filters="getFilters(column.filter)"
             :filter-method="filterHandler"
@@ -350,7 +354,8 @@ export default {
       multipleSelection: [],
       downloadLoading: false,
       filename: '',
-      pdfDialogVisible: false
+      pdfDialogVisible: false,
+      x: ''
     }
   },
   computed: {
@@ -358,6 +363,7 @@ export default {
   },
   created() {
     this.initView()
+    this.x = window.matchMedia('(max-width: 800px)')
   },
   methods: {
     convertDate(val) {
@@ -607,29 +613,35 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.control-modal {
-  width: 25em;
-}
-</style>
-
 <style lang="scss">
-.dialog-class-lista {
-  border-radius: 10px;
+
+// Pantallas superiores a 800px (PC)
+@media screen and (min-width: 800px) {
+  .dialog-class-lista {
+    border-radius: 10px;
+  }
+
+  .dialog-class-lista .el-dialog__body {
+    padding-top: 0 !important;
+  }
+
+  .control-modal {
+    width: 25em;
+  }
 }
 
-.dialog-class-lista .el-dialog__body {
-  padding-top: 0 !important;
-}
+// Pantallas inferiores a 800px (mobile)
+@media screen and (max-width: 800px) {
+  .dialog-class-lista .el-dialog__body {
+    padding: 0 !important;
+  }
 
-.dialog-class-agregar .el-dialog__header {
-  border: 1px solid red;
-  border-radius: 10px;
-  display: none;
-}
+  .dialog-class-lista .el-dialog__header {
+    display: none;
+  }
 
-.dialog-class-agregar .el-dialog__body {
-  margin: 0 !important;
-  padding: 0 !important;
+  .control-modal {
+    width: 95%;
+  }
 }
 </style>

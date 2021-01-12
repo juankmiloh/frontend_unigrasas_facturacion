@@ -4,27 +4,32 @@ export const CONSTANTS = {
     tableColumnsItems: [{
             label: 'Nombre',
             prop: 'label',
-            width: 300
+            width: 300,
+            width_xs: 200
         },
         {
             label: 'Identificador',
             prop: 'id',
             // width: 270
+            width_xs: 150
         },
         {
             label: 'Precio',
             prop: 'precio',
             // width: 125
+            width_xs: 125
         },
         {
             label: 'Descripción',
             prop: 'descripcion',
             // width: 110
+            width_xs: 200
         },
         {
             label: 'Fecha registro',
             prop: 'registro',
             // width: 110
+            width_xs: 200
         }
     ],
     formItem: {

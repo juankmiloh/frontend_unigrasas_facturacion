@@ -27,6 +27,7 @@
           :rules="rulesFormProceso"
           :model="formProceso"
           label-width="120px"
+          :label-position="x.matches ? 'top' : ''"
           class="demo-ruleForm"
         >
           <el-col :md="8" style="border: 0px solid blue">
@@ -125,7 +126,7 @@
 
           <!-- Form datos medios de pago -->
 
-          <el-col :md="16" style="border: 0px solid blue">
+          <el-col :md="16" class="espacio-top-pago">
             <el-row>
               <el-col
                 :md="24"
@@ -137,7 +138,7 @@
                     <span>Medios de pago</span>
                   </div> -->
                   <el-row :gutter="20">
-                    <el-col :span="8" style="border: 0px solid red">
+                    <el-col :span="8" :xs="24" style="border: 0px solid red">
                       <el-form-item label="" prop="metodopago">
                         <el-row>
                           <el-col :span="24">
@@ -163,7 +164,7 @@
                         </el-row>
                       </el-form-item>
                     </el-col>
-                    <el-col :span="8" style="border: 0px solid">
+                    <el-col :span="8" :xs="24" style="border: 0px solid">
                       <el-form-item label="" prop="mediopago">
                         <el-row>
                           <el-col :span="24">
@@ -189,7 +190,7 @@
                         </el-row>
                       </el-form-item>
                     </el-col>
-                    <el-col :span="8" style="border: 0px solid">
+                    <el-col :span="8" :xs="24" style="border: 0px solid">
                       <el-form-item label="" prop="f_pago">
                         <el-row>
                           <el-col :span="24">
@@ -213,19 +214,19 @@
 
               <!-- Tabla de items -->
 
-              <el-col :md="24" style="border: 0px solid blue; padding-top: 1%;">
+              <el-col :md="24" class="espacio-top-items">
                 <!-- Tabla de causales -->
                 <tabla-items v-if="id" :idproceso="id" :editar="abogadoEditar" @total="submitTotal" />
               </el-col>
 
-              <el-col :md="24" style="padding-top: 1%;" class="div-card">
+              <el-col :md="24" class="div-card espacio-top-items">
                 <el-card class="box-card div-card-header">
                   <el-row>
-                    <el-col style="border: 1px solid white;" :span="14">
+                    <el-col style="border: 1px solid white;" :span="14" :xs="24">
                       <span />
                     </el-col>
-                    <el-col :span="10" style="text-align: right;">
-                      <el-form-item label="Total" prop="total">
+                    <el-col :span="10" :xs="24" class="div-total">
+                      <el-form-item label="Total ($)" prop="total">
                         <el-input
                           v-model="valueTotal"
                           autocomplete="off"
@@ -316,7 +317,8 @@ export default {
       abogadoEditar: false,
       total: 0,
       valueTotal: 0,
-      generarFactura: false
+      generarFactura: false,
+      x: ''
     }
   },
   computed: {
@@ -339,6 +341,7 @@ export default {
       this.id = this.$route.params.id
       // this.getEtapasProceso(this.id) // Funcion para obtener las etapas del proceso
       this.initView()
+      this.x = window.matchMedia('(max-width: 800px)')
     }
 
     // Why need to make a copy of this.$route here?
@@ -575,8 +578,30 @@ export default {
   margin-left: 0% !important;
 }
 
-.div-card .div-card-header .el-card__body {
-  border: 0px solid red;
-  padding: 2% 2% 0% 2%;
+// Pantallas superiores a 800px (PC)
+@media screen and (min-width: 800px) {
+  .espacio-top-items {
+    padding-top: 1%;
+  }
+
+  .div-card .div-card-header .el-card__body {
+    border: 0px solid red;
+    padding: 2% 2% 0% 2%;
+  }
+
+  .div-total {
+    text-align: right;
+  }
+}
+
+// Pantallas inferiores a 800px (mobile)
+@media screen and (max-width: 800px) {
+  .espacio-top-pago {
+    padding-top: 6%;
+  }
+
+  .espacio-top-items {
+    padding-top: 6%;
+  }
 }
 </style>

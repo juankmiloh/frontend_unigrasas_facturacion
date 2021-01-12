@@ -5,31 +5,36 @@ export const CONSTANTS = {
             label: 'Factura',
             prop: 'idfactura',
             width: '',
-            filter: 'filterFactura'
+            filter: 'filterFactura',
+            width_xs: 110
         },
         {
             label: 'Cliente',
             prop: 'cliente',
             width: 350,
-            filter: 'filterCliente'
+            filter: 'filterCliente',
+            width_xs: 200
         },
         {
             label: 'Emisión',
             prop: 'f_emision',
             width: '',
-            filter: 'filterFcreacion'
+            filter: 'filterFcreacion',
+            width_xs: 150
         },
         {
             label: 'Total',
             prop: 'total',
             width: '',
-            filter: 'filterTotal'
+            filter: 'filterTotal',
+            width_xs: 110
         },
         {
             label: 'Vendedor',
             prop: 'usuario',
             width: '',
-            filter: 'filterVendedor'
+            filter: 'filterVendedor',
+            width_xs: 200
         }
     ],
     tableColumnsAbogado: [{

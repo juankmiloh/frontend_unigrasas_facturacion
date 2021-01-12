@@ -36,7 +36,7 @@
             :label="column.label"
             :prop="column.prop"
             align="center"
-            :width="column.width"
+            :width="x.matches ? column.width_xs : column.width"
             sortable
           >
             <template slot-scope="scope">
@@ -52,7 +52,7 @@
               <div v-else>{{ scope.row[column.prop] }}</div>
             </template>
           </el-table-column>
-          <el-table-column align="center">
+          <el-table-column align="center" :width="x.matches ? '180' : ''">
             <!-- eslint-disable-next-line -->
             <template slot="header" slot-scope="scope">
               <el-input
@@ -141,12 +141,14 @@ export default {
       modalAction: '',
       listaProductos: [],
       delItem: {},
-      busquedaItem: ''
+      busquedaItem: '',
+      x: ''
     }
   },
   async created() {
     this.loading = true
     await this.getItems()
+    this.x = window.matchMedia('(max-width: 800px)')
   },
   async mounted() {
     this.formItem = {}

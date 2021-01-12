@@ -4,32 +4,38 @@ export const CONSTANTS = {
     tableColumnsItems: [{
             label: 'Nombre',
             prop: 'nombre',
-            width: 300
+            width: 300,
+            width_xs: 200
         },
         {
             label: 'Nit',
             prop: 'nit',
-            width: 110
+            width: 110,
+            width_xs: 110
         },
         {
             label: 'Direccion',
             prop: 'direccion',
             // width: 200
+            width_xs: 200
         },
         {
             label: 'Email',
             prop: 'email',
             // width: 125
+            width_xs: 125
         },
         {
             label: 'Teléfono',
             prop: 'telefono',
-            width: 110
+            width: 110,
+            width_xs: 110
         },
         {
             label: 'Registro',
             prop: 'registro',
-            width: 110
+            width: 110,
+            width_xs: 120
         }
     ],
     formItem: {
@@ -44,7 +50,7 @@ export const CONSTANTS = {
     domItem: [{
             type: 'radiogroup',
             prop: 'tipopersona',
-            label: ' '
+            label: 'Tipo'
         },
         {
             type: 'text',
