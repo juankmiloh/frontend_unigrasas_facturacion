@@ -41,31 +41,36 @@ export const CONSTANTS = {
             label: 'Numeración',
             prop: 'idfactura',
             width: '',
-            filter: 'filterFactura'
+            filter: 'filterFactura',
+            width_xs: 150
         },
         {
-            label: 'Cliente / CUFE',
+            label: 'Cliente',
             prop: 'cliente',
             width: 350,
-            filter: 'filterCliente'
+            filter: 'filterCliente',
+            width_xs: 250
         },
         {
             label: 'Creacion',
             prop: 'f_emision',
             width: '',
-            filter: 'filterFcreacion'
+            filter: 'filterFcreacion',
+            width_xs: 150
         },
         {
             label: 'Total',
             prop: 'total',
             width: '',
-            filter: 'filterTotal'
+            filter: 'filterTotal',
+            width_xs: 150
         },
         {
             label: 'Vendedor',
             prop: 'usuario',
             width: '',
-            filter: 'filterVendedor'
+            filter: 'filterVendedor',
+            width_xs: 200
         }
     ],
     tableColumnsEtapas: [{

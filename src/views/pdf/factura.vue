@@ -2,13 +2,14 @@
   <div>
     <el-collapse-transition>
       <div v-show="showElements" style="padding-bottom: 10px">
-        <sticky class-name="sub-navbar">
+        <sticky class-name="sub-navbar" style="position: fixed; width: 100%;">
           <div style="text-align: center; color: white">
             <el-row>
-              <el-col :span="20" :xs="11" class="header-factura">
-                <label style="font-size: x-large">Factura N° {{ id }}</label>
+              <el-col :span="13" :xs="9" class="div-header">
+                <label v-if="x.matches" style="font-size: x-large">Fact {{ id }}</label>
+                <label v-else style="font-size: x-large">Factura no. {{ id }}</label>
               </el-col>
-              <el-col :span="4" :xs="13">
+              <el-col :span="11" :xs="15" style="border: 0px solid red; text-align: right;">
                 <!-- Div Botones -->
                 <el-button
                   v-show="showElements"
@@ -30,7 +31,7 @@
         </sticky>
       </div>
     </el-collapse-transition>
-    <br>
+    <br><br><br>
     <div
       v-loading.fullscreen.lock="fullscreenLoading"
       class="main-article"
@@ -243,7 +244,7 @@ import Sticky from '@/components/Sticky' // 粘性header组件
 import logoEmpresa from '@/assets/unigrasas.jpg'
 import { getFacturaInicial, getFactura } from '@/api/unigrasas/facturas'
 import { getListFacturaItems } from '@/api/unigrasas/factura-has-item'
-import { numeroALetras } from './scripts/numeroLetras'
+import { numeroALetras } from '@/scripts/numeroLetras'
 
 export default {
   name: 'ViewPdf',
@@ -285,7 +286,7 @@ export default {
         centPlural: 'CENTAVOS',
         centSingular: 'CENTAVO'
       })
-      console.log(letras)
+      // console.log(letras)
       return letras
     },
     fetchData() {
@@ -302,7 +303,7 @@ export default {
           this.$nextTick(() => {
             window.print()
             if (this.x.matches) {
-              setTimeout(() => {
+              setTimeout(() => { // Linea para que funcione en dispositivo movil
                 this.showElements = true
               }, 10000)
             } else {
@@ -417,13 +418,15 @@ export default {
 
 // Pantallas superiores a 800px (PC)
 @media screen and (min-width: 800px) {
-  .header-factura {
-    padding-left: 15%;
+  .div-header {
+    text-align: right;
   }
 }
 
 // Pantallas inferiores a 800px (mobile)
 @media screen and (max-width: 800px) {
-
+  .div-header {
+    text-align: center;
+  }
 }
 </style>

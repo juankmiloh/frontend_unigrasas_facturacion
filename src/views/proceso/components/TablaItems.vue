@@ -11,7 +11,7 @@
           v-loading="loading"
           :data="listaItems"
           style="width: 100%; border: 1px solid #d8ebff;"
-          height="37vh"
+          height="35vh"
           border
           fit
           highlight-current-row
@@ -27,7 +27,8 @@
           >
             <template slot-scope="scope">
               <div v-if="column.prop === 'item'"><el-tag type="primary" style="font-size: 10px;">{{ scope.row[column.prop] }}</el-tag></div>
-              <div v-else-if="column.prop === 'precio'" style="font-size: 13px;">$ {{ new Intl.NumberFormat("de-DE").format(scope.row[column.prop]) }}</div>
+              <div v-else-if="column.prop === 'cantidad'" style="font-size: 13px;">$ {{ scope.row[column.prop] | formatNumber }}</div>
+              <div v-else-if="column.prop === 'precio'" style="font-size: 13px;">$ {{ scope.row[column.prop] | formatNumber }}</div>
               <div v-else-if="column.prop === 'total'" style="font-size: 13px;">$ {{ getTotal(scope.row) }}</div>
               <div v-else style="font-size: 13px;">{{ scope.row[column.prop] }}</div>
             </template>

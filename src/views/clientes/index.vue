@@ -43,6 +43,9 @@
               <div v-if="column.prop === 'nombre'">
                 <el-tag type="primary">{{ scope.row[column.prop] | uppercase }}</el-tag>
               </div>
+              <div v-else-if="column.prop === 'email'">
+                <el-tag type="info">{{ scope.row[column.prop] | lowercase }}</el-tag>
+              </div>
               <div v-else-if="column.prop === 'registro'">
                 <div><i class="el-icon-time" /> {{ scope.row[column.prop] | formatDate }}</div>
               </div>

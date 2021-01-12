@@ -5,7 +5,7 @@ export const CONSTANTS = {
             label: 'Nombre',
             prop: 'nombre',
             width: 300,
-            width_xs: 200
+            width_xs: 300
         },
         {
             label: 'Nit',
@@ -23,7 +23,7 @@ export const CONSTANTS = {
             label: 'Email',
             prop: 'email',
             // width: 125
-            width_xs: 125
+            width_xs: 250
         },
         {
             label: 'Teléfono',

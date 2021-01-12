@@ -1,5 +1,5 @@
 <template>
-  <div class="createPost-container" style="background: #f7fbff;">
+  <div class="createPost-container" style="background: white;">
     <sticky class-name="sub-navbar">
       <div style="border: 0px solid red">
         <span />
@@ -9,7 +9,6 @@
     <div class="app-container">
       <div>
         <el-row :gutter="20">
-
           <el-col :span="10" :xs="24">
             <lista-users :data="viewRefresh" @handleSetUser="handleSetUser" />
           </el-col>
@@ -36,7 +35,7 @@
                   </label>
                 </div>
 
-                <el-row :gutter="10" style="border: 0px solid red; padding-left: 15%; padding-right: 15%;">
+                <el-row :gutter="10" class="div-create-user">
                   <el-col :span="24" :xs="24" style="border: 0px solid red; text-align: center;">
                     <el-form-item label="" prop="genero" class="item-genero">
                       <el-radio-group v-model="formUsuario.genero">
@@ -116,18 +115,17 @@
                       />
                     </el-form-item>
                   </el-col>
-                  <el-col :span="12" :xs="24" style="border: 0px solid red; text-align: right;">
+                  <el-col :span="12" :xs="24" class="div-btn-save">
                     <el-form-item>
                       <el-button
-                        style="width: 10em"
                         type="success"
                         @click="submitForm('formUsuario')"
                       >{{ textButton }}</el-button>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="12" :xs="24" style="border: 0px solid red; text-align: left;">
+                  <el-col :span="12" :xs="24" class="div-btn-clear">
                     <el-form-item>
-                      <el-button style="width: 10em" @click="resetForm('formUsuario')">Limpiar</el-button>
+                      <el-button @click="resetForm('formUsuario')">Limpiar</el-button>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -340,6 +338,40 @@ export default {
 <style lang="scss" scoped>
 .control-modal {
   width: 100%;
+}
+
+// Pantallas superiores a 800px (PC)
+@media screen and (min-width: 800px) {
+  .div-create-user {
+    border: 0px solid red; padding-left: 15%; padding-right: 15%;
+  }
+
+  .div-btn-save {
+    text-align: right;
+  }
+
+  .div-btn-save button {
+    width: 10em;
+  }
+
+  .div-btn-clear {
+    text-align: left;
+  }
+
+  .div-btn-clear button {
+    width: 10em;
+  }
+}
+
+// Pantallas inferiores a 800px (mobile)
+@media screen and (max-width: 800px) {
+  .div-btn-save button {
+    width: 100%;
+  }
+
+  .div-btn-clear button {
+    width: 100%;
+  }
 }
 </style>
 

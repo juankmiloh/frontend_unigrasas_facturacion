@@ -5,7 +5,7 @@ export const CONSTANTS = {
             label: 'Nombre',
             prop: 'label',
             width: 300,
-            width_xs: 200
+            width_xs: 300
         },
         {
             label: 'Identificador',

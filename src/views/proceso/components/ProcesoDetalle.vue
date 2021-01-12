@@ -1,5 +1,5 @@
 <template>
-  <div class="createPost-container" style="background: #f7fbff; height: 89vh">
+  <div class="createPost-container" style="background: white; height: 89vh">
     <sticky class-name="sub-navbar">
       <div style="border: 0px solid red">
         <!-- Boton para abrir modal de etapas -->
@@ -222,11 +222,8 @@
               <el-col :md="24" class="div-card espacio-top-items">
                 <el-card class="box-card div-card-header">
                   <el-row>
-                    <el-col style="border: 1px solid white;" :span="14" :xs="24">
-                      <span />
-                    </el-col>
-                    <el-col :span="10" :xs="24" class="div-total">
-                      <el-form-item label="Total ($)" prop="total">
+                    <el-col :md="24" :xs="24" class="input-total">
+                      <el-form-item label="Total factura ($)" prop="total">
                         <el-input
                           v-model="valueTotal"
                           autocomplete="off"
@@ -236,6 +233,9 @@
                           readonly
                         />
                       </el-form-item>
+                      <div style="text-align: center; padding-top: 1%; padding-bottom: 1%;">
+                        <span style="color: #303133; font-size: 13px;">( {{ convertNumberToLetters(formProceso.total) | uppercaseFirst }} )</span>
+                      </div>
                     </el-col>
                   </el-row>
                 </el-card>
@@ -285,6 +285,7 @@ import { CONSTANTS } from '@/constants/constants'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 import moment from 'moment'
 import TablaItems from './TablaItems'
+import { numeroALetras } from '@/scripts/numeroLetras'
 
 export default {
   name: 'ProcesoDetalle',
@@ -350,6 +351,16 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
+    convertNumberToLetters(val) {
+      const letras = numeroALetras(val, {
+        plural: 'PESOS',
+        singular: 'PESO',
+        centPlural: 'CENTAVOS',
+        centSingular: 'CENTAVO'
+      })
+      // console.log(letras)
+      return letras
+    },
     handlePDF() {
       const routeData = this.$router.resolve({ path: `/pdf/factura/${this.id}` })
       window.open(routeData.href, '_self')
@@ -578,6 +589,10 @@ export default {
   margin-left: 0% !important;
 }
 
+.input-total .el-form-item {
+  margin-bottom: 0px !important;
+}
+
 // Pantallas superiores a 800px (PC)
 @media screen and (min-width: 800px) {
   .espacio-top-items {
@@ -592,6 +607,10 @@ export default {
   .div-total {
     text-align: right;
   }
+
+  .separador-total {
+    border: 1px solid white;
+  }
 }
 
 // Pantallas inferiores a 800px (mobile)
@@ -602,6 +621,10 @@ export default {
 
   .espacio-top-items {
     padding-top: 6%;
+  }
+
+  .separador-total {
+    display: none;
   }
 }
 </style>

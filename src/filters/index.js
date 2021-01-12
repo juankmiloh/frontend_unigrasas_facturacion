@@ -81,6 +81,14 @@ export function uppercaseFirst(string) {
 }
 
 /**
+ * Lower case
+ * @param {String} string
+ */
+export function lowercase(string) {
+    return string.toLowerCase()
+}
+
+/**
  * Lower case first char
  * @param {String} string
  */

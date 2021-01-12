@@ -4,7 +4,7 @@
       <span>Usuarios</span>
     </div>
 
-    <div v-loading="loading" style="padding-left: 5%; padding-right: 5%;">
+    <div v-loading="loading" class="div-list-user">
       <el-card v-for="user in datosUsuarios" :key="user.idusuario" style="margin-bottom: 3%;">
         <el-row class="border-card">
           <el-col :span="6" :xs="24" style="border: 0px solid red; text-align: center;">
@@ -168,16 +168,6 @@ export default {
 }
 </script>
 
-<style>
-.dialog-class-lista {
-  border-radius: 10px;
-}
-
-.dialog-class-lista .el-dialog__body {
-  padding-top: 0 !important;
-}
-</style>
-
 <style lang="scss" scoped>
 // Pantallas superiores a 800px (PC)
 @media screen and (min-width: 800px) {
@@ -196,6 +186,10 @@ export default {
   .btn-user-delete {
     padding-top: 5%; border: 0px solid red; text-align: center;
   }
+
+  .div-list-user {
+    padding-left: 5%; padding-right: 5%;
+  }
 }
 
 // Pantallas inferiores a 800px (mobile)
@@ -205,11 +199,11 @@ export default {
   }
 
   .btn-user-success {
-    padding-top: 5%; text-align: right; padding-right: 5%;
+    padding-top: 5%; text-align: right; padding-right: 2%;
   }
 
   .btn-user-delete {
-    padding-top: 5%; text-align: left; padding-left: 5%;
+    padding-top: 5%; text-align: left; padding-left: 2%;
   }
 }
 </style>

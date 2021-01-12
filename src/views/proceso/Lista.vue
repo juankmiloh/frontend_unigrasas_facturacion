@@ -249,11 +249,11 @@
             <template slot-scope="scope">
               <div v-if="column.prop === 'usuario'"><el-tag type="primary">{{ scope.row[column.prop] }}</el-tag></div>
               <div v-else-if="column.prop === 'f_emision'"><i class="el-icon-time" /> {{ convertDate(scope.row[column.prop]) }}</div>
-              <div v-else-if="column.prop === 'total'">$ {{ new Intl.NumberFormat("de-DE").format(scope.row[column.prop]) }}</div>
+              <div v-else-if="column.prop === 'total'">$ {{ scope.row[column.prop] | formatNumber }}</div>
               <div v-else>{{ scope.row[column.prop] }}</div>
             </template>
           </el-table-column>
-          <el-table-column align="center" :width="showOnlyAdmin ? 190 : ''">
+          <el-table-column align="center" :width="showOnlyAdmin ? 190 : 140">
             <!-- eslint-disable-next-line -->
             <template slot="header" slot-scope="scope">
               <el-input
@@ -278,7 +278,6 @@
                 @click="handleProceso(scope.row)"
               ><b>Ver</b></el-button>
               <el-button
-                v-show="showOnlyAdmin"
                 :disabled="(scope.row.f_vencimiento === null) || (scope.row.total === 0)"
                 size="mini"
                 type="danger"
