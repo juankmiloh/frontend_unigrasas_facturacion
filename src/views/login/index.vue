@@ -59,10 +59,10 @@
               </el-col>
             </el-row>
             <el-row style="border: 0px solid; padding: 6% 6% 6% 6%;">
-              <el-col style="border: 0px solid;" :xs="12" :md="10">
+              <el-col class="div-btn-login" style="border: 0px solid;" :xs="24" :md="10">
                 <el-button :loading="loading" type="primary" style="width: 100%;" @click.native.prevent="handleLogin">Ingresar</el-button>
               </el-col>
-              <el-col :xs="12" :md="14" style="padding-top: 0.6em; padding-left: 5%;">
+              <el-col :xs="24" :md="14" class="link-password">
                 <a href="" style="color: #409EFF;">Recordar contraseña</a>
               </el-col>
             </el-row>
@@ -306,6 +306,11 @@ export default {
       background: #f5f5f5;
       border-radius: 5px;
     }
+
+    .link-password {
+      display: block;
+      padding-top: 0.6em; padding-left: 5%;
+    }
 	}
 
 	// Pantallas inferiores a 800px (mobile)
@@ -323,9 +328,19 @@ export default {
       background-color: white;
     }
 
+    .div-btn-login {
+      text-align: center;
+    }
+
     .cont-card {
       border: 0px solid green;
       padding: 10% 0% 0% 0%;
+    }
+
+    .link-password {
+      display: block;
+      padding-top: 5%;
+      text-align: center;
     }
 	}
 </style>
