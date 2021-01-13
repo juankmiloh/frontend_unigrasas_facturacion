@@ -230,7 +230,7 @@
               <div v-else>{{ scope.row[column.prop] }}</div>
             </template>
           </el-table-column>
-          <el-table-column align="center" :width="showOnlyAdmin ? 250 : 140">
+          <el-table-column align="center" :width="showOnlyAdmin ? 250 : 160">
             <!-- eslint-disable-next-line -->
             <template slot="header" slot-scope="scope">
               <el-input
@@ -269,6 +269,7 @@
               </el-tooltip>
               <el-tooltip content="Anular" placement="top" effect="light">
                 <el-button
+                  v-show="showOnlyAdmin"
                   :disabled="scope.row.estado === 4"
                   size="mini"
                   type="danger"

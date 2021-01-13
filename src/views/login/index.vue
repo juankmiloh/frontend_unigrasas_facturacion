@@ -110,10 +110,10 @@ export default {
     return {
       logPage: logPage,
       loginForm: {
-        // username: '',
-        // password: ''
-        username: 'nardia',
-        password: '123456'
+        username: '',
+        password: ''
+        // username: 'nardia',
+        // password: '123456'
       },
       loginRules: {
         username: [
