@@ -41,10 +41,10 @@ export function updateFactura(data) {
     });
 }
 
-export function deleteFactura(id) {
+export function anularFactura(id) {
     return request({
         url: '/procesos',
-        method: 'delete',
+        method: 'put',
         params: { 'idProceso': id }
     });
 }

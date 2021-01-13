@@ -1,37 +1,39 @@
 <template>
   <div>
-    <el-collapse-transition>
-      <div v-show="showElements" style="padding-bottom: 10px">
-        <sticky class-name="sub-navbar" style="position: fixed; width: 100%;">
-          <div style="text-align: center; color: white">
-            <el-row>
-              <el-col :span="13" :xs="9" class="div-header">
-                <label v-if="x.matches" style="font-size: x-large">Fact {{ id }}</label>
-                <label v-else style="font-size: x-large">Factura no. {{ id }}</label>
-              </el-col>
-              <el-col :span="11" :xs="15" style="border: 0px solid red; text-align: right;">
-                <!-- Div Botones -->
-                <el-button
-                  v-show="showElements"
-                  style="border: 2px solid #67c23a"
-                  size="medium"
-                  icon="el-icon-printer"
-                  @click="fetchData()"
-                >Imprimir</el-button>
-                <el-button
-                  v-show="showElements"
-                  style="border: 1px solid #67c23a"
-                  type="warning"
-                  size="medium"
-                  @click="closeWindow()"
-                >{{ btnClose() }}</el-button>
-              </el-col>
-            </el-row>
-          </div>
-        </sticky>
-      </div>
-    </el-collapse-transition>
-    <br><br><br>
+    <!-- <el-collapse-transition> -->
+    <div v-show="showElements" style="padding-bottom: 50px">
+      <sticky class-name="sub-navbar" style="position: fixed; width: 100%;">
+        <div style="text-align: center; color: white">
+          <el-row>
+            <el-col :span="13" :xs="9" class="div-header">
+              <label v-if="x.matches" style="font-size: x-large">Fact {{ id }}</label>
+              <label v-else style="font-size: x-large">Factura no. {{ id }}</label>
+            </el-col>
+            <el-col :span="11" :xs="15" style="border: 0px solid red; text-align: right;">
+              <!-- Div Botones -->
+              <el-button
+                v-show="showElements"
+                style="border: 2px solid #67c23a"
+                size="medium"
+                icon="el-icon-printer"
+                @click="fetchData()"
+              >Imprimir</el-button>
+              <el-button
+                v-show="showElements"
+                style="border: 1px solid #67c23a"
+                type="warning"
+                size="medium"
+                @click="closeWindow()"
+              >{{ btnClose() }}</el-button>
+            </el-col>
+          </el-row>
+        </div>
+      </sticky>
+    </div>
+    <!-- </el-collapse-transition> -->
+    <!-- <div v-show="showElements">
+      <br><br><br>
+    </div> -->
     <div
       v-loading.fullscreen.lock="fullscreenLoading"
       class="main-article"

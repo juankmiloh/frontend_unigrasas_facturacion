@@ -11,7 +11,7 @@ export const CONSTANTS = {
         {
             label: 'Cliente',
             prop: 'cliente',
-            width: 350,
+            width: 300,
             filter: 'filterCliente',
             width_xs: 200
         },

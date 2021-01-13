@@ -44,7 +44,7 @@
       </sticky>
       <div
         class="createPost-container"
-        style="padding-top: 35px; padding-bottom: 20px; padding-left: 13px"
+        style="padding-top: 20px; padding-bottom: 20px; padding-left: 13px"
       >
         <el-form
           ref="formAgregar"
@@ -148,7 +148,7 @@
       </sticky>
       <div
         class="createPost-container"
-        style="padding-top: 35px; padding-bottom: 5px; padding-left: 20px"
+        style="padding-top: 20px; padding-bottom: 5px; padding-left: 20px"
       >
         <el-form :model="formUsuario" label-width="120px" :label-position="x.matches ? 'top' : ''" class="demo-ruleForm">
           <el-form-item label="Factura">
@@ -190,30 +190,6 @@
       </div>
     </el-dialog>
 
-    <!-- Dialogo que se aparece cuando se va a eliminar un expediente -->
-
-    <el-dialog
-      v-el-drag-dialog
-      title="Advertencia"
-      :visible.sync="deleteDialogVisible"
-      width="35%"
-      center
-      custom-class="dialog-class-lista"
-      :show-close="false"
-    >
-      <br>
-      <center>
-        <span>¿Realmente desea eliminar el expediente <b>No. {{ delExpediente }}</b>?</span>
-      </center>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="deleteDialogVisible = false">Cancelar</el-button>
-        <el-button
-          type="primary"
-          @click="borrarExpediente"
-        >Confirmar</el-button>
-      </span>
-    </el-dialog>
-
     <!-- Tabla donde se lista, ordena y realiza busqueda de los expedientes -->
 
     <div class="app-container">
@@ -248,12 +224,13 @@
           >
             <template slot-scope="scope">
               <div v-if="column.prop === 'usuario'"><el-tag type="primary">{{ scope.row[column.prop] }}</el-tag></div>
+              <div v-else-if="column.prop === 'cliente'"><el-tag type="info">{{ scope.row[column.prop] }}</el-tag></div>
               <div v-else-if="column.prop === 'f_emision'"><i class="el-icon-time" /> {{ convertDate(scope.row[column.prop]) }}</div>
               <div v-else-if="column.prop === 'total'">$ {{ scope.row[column.prop] | formatNumber }}</div>
               <div v-else>{{ scope.row[column.prop] }}</div>
             </template>
           </el-table-column>
-          <el-table-column align="center" :width="showOnlyAdmin ? 190 : 140">
+          <el-table-column align="center" :width="showOnlyAdmin ? 250 : 140">
             <!-- eslint-disable-next-line -->
             <template slot="header" slot-scope="scope">
               <el-input
@@ -265,34 +242,53 @@
               />
             </template>
             <template slot-scope="scope">
-              <el-button
-                v-show="showOnlyAdmin"
-                style="border: 1px solid #409eff;"
-                size="mini"
-                icon="el-icon-user-solid"
-                @click="handlePermisos(scope.row)"
-              />
-              <el-button
-                size="mini"
-                type="success"
-                @click="handleProceso(scope.row)"
-              ><b>Ver</b></el-button>
-              <el-button
-                :disabled="(scope.row.f_vencimiento === null) || (scope.row.total === 0)"
-                size="mini"
-                type="danger"
-                icon="el-icon-document"
-                @click="handlePDF(scope.row)"
-              />
+              <el-tooltip content="Vendedor" placement="top" effect="light">
+                <el-button
+                  v-show="showOnlyAdmin"
+                  style="border: 1px solid #409eff;"
+                  size="mini"
+                  icon="el-icon-user-solid"
+                  @click="handlePermisos(scope.row)"
+                />
+              </el-tooltip>
+              <el-tooltip content="Detalle" placement="top" effect="light">
+                <el-button
+                  size="mini"
+                  type="success"
+                  @click="handleProceso(scope.row)"
+                ><b>Ver</b></el-button>
+              </el-tooltip>
+              <el-tooltip content="PDF" placement="top" effect="light">
+                <el-button
+                  :disabled="(scope.row.f_vencimiento === null) || (scope.row.total === 0)"
+                  size="mini"
+                  type="warning"
+                  icon="el-icon-document"
+                  @click="handlePDF(scope.row)"
+                />
+              </el-tooltip>
+              <el-tooltip content="Anular" placement="top" effect="light">
+                <el-button
+                  :disabled="scope.row.estado === 4"
+                  size="mini"
+                  type="danger"
+                  @click="handleEliminar(scope.row)"
+                ><b>X</b></el-button>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
       </el-card>
     </div>
 
-    <!-- <modal-pdf
-      :modalvisible="pdfDialogVisible"
-    /> -->
+    <!-- Modal de confirmacion para anular la factura -->
+
+    <modal-anular
+      titulo="Advertencia"
+      :mensaje="mensajeModalAnular"
+      :modalvisible="anularDialogVisible"
+      @confirmar="submitAnular"
+    />
   </div>
 </template>
 
@@ -303,18 +299,19 @@ import {
   getListFacturas,
   createFactura,
   updateFacturaUsuario,
-  deleteFactura
+  anularFactura
 } from '@/api/unigrasas/facturas'
 import { getListUsuarios } from '@/api/unigrasas/usuarios'
 import { getListClientes } from '@/api/unigrasas/clientes'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 import Sticky from '@/components/Sticky' // 粘性header组件
 import moment from 'moment'
+import ModalAnular from '@/components/ModalConfirm'
 
 export default {
   name: 'ViewProcesos',
   directives: { elDragDialog },
-  components: { Sticky },
+  components: { Sticky, ModalAnular },
   data() {
     return {
       dialogTableVisible: false,
@@ -354,7 +351,10 @@ export default {
       downloadLoading: false,
       filename: '',
       pdfDialogVisible: false,
-      x: ''
+      x: '',
+      anularFact: '',
+      mensajeModalAnular: '',
+      anularDialogVisible: false
     }
   },
   computed: {
@@ -365,6 +365,31 @@ export default {
     this.x = window.matchMedia('(max-width: 800px)')
   },
   methods: {
+    handleEliminar(data) {
+      this.anularFact = data.idfactura
+      this.mensajeModalAnular = `¿Realmente desea anular la factura No. <b>${data.idfactura}</b>?`
+      this.anularDialogVisible = true
+    },
+    async submitAnular(confirm) {
+      if (confirm) {
+        this.loading = true
+        await anularFactura(this.anularFact).then(async(response) => {
+          this.$notify({
+            title: 'Información',
+            message: 'Se ha anulado la factura!',
+            position: 'bottom-right',
+            type: 'success',
+            duration: 2000
+          })
+          this.anularDialogVisible = false
+          this.getProcesos()
+          this.setFilters()
+          this.loading = false
+        })
+      } else {
+        this.anularDialogVisible = false
+      }
+    },
     convertDate(val) {
       // console.log('convertDate -> ', val)
       if (val !== 'No registra') {
@@ -385,7 +410,7 @@ export default {
       if (this.multipleSelection.length) {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['Numeración', 'Cliente / CUFE', 'Creación (DD-MM-AA)', 'Total', 'Vendedor']
+          const tHeader = ['Numeración', 'Cliente', 'Creación (DD-MM-AA)', 'Total', 'Vendedor']
           const filterVal = ['idfactura', 'cliente', 'f_emision', 'total', 'usuario']
           const list = this.multipleSelection
           const data = this.formatJson(filterVal, list)
@@ -519,19 +544,6 @@ export default {
       const routeData = this.$router.resolve({ path: `/pdf/factura/${data.idfactura}` })
       window.open(routeData.href, '_self')
       // window.open(routeData.href, '_blank')
-    },
-    async borrarExpediente() {
-      this.loading = true
-      await deleteFactura(this.delIdproceso).then((response) => {
-        this.$notify({
-          title: 'Información',
-          message: 'Se ha eliminado la factura',
-          type: 'warning',
-          duration: 2000
-        })
-        this.getProcesos()
-      })
-      this.deleteDialogVisible = false
     },
     async asignarUsuario() {
       this.loading = true

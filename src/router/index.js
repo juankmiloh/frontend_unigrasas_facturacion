@@ -271,62 +271,62 @@ export const asyncRoutes = [{
             },
         ]
     },
-    {
-        path: '/reportes',
-        component: Layout,
-        children: [{
-            path: 'index',
-            component: () =>
-                import ('@/views/reportes/index'),
-            name: 'reportes',
-            meta: { title: 'Reportes', icon: 'chart', noCache: false, roles: ['administrador', 'vendedor', 'consulta'] }
-        }, ]
-    },
     // {
-    //     path: '/informe',
+    //     path: '/reportes',
     //     component: Layout,
-    //     // redirect: '/informe/empresa',
-    //     alwaysShow: true, // will always show the root menu
-    //     name: 'informe',
-    //     meta: {
-    //         title: 'Informes',
-    //         icon: 'chart',
-    //         roles: ['administrador', 'vendedor', 'consulta'] // you can set roles in root nav
-    //     },
-    //     children: [
-    //         // {
-    //         //       path: 'page',
-    //         //       component: () =>
-    //         //           import ('@/views/permission/page'),
-    //         //       name: 'PagePermission',
-    //         //       meta: {
-    //         //           title: 'Page Permission',
-    //         //           roles: ['administrador', 'vendedor'] // or you can only set roles in sub nav
-    //         //       }
-    //         //   },
-    //         // {
-    //         //     path: 'directive',
-    //         //     component: () =>
-    //         //         import ('@/views/permission/directive'),
-    //         //     name: 'DirectivePermission',
-    //         //     meta: {
-    //         //         title: 'Directive Permission'
-    //         //             // if do not set roles, means: this page does not require permission
-    //         //     }
-    //         // },
-    //         {
-    //             path: 'pactivos',
-    //             component: () =>
-    //                 import ('@/views/informe/Expedientes'),
-    //             name: 'procesos_activos',
-    //             meta: {
-    //                 title: 'Expedientes',
-    //                 icon: 'excel',
-    //                 roles: ['administrador', 'vendedor', 'consulta']
-    //             }
-    //         },
-    //     ]
+    //     children: [{
+    //         path: 'index',
+    //         component: () =>
+    //             import ('@/views/reportes/index'),
+    //         name: 'reportes',
+    //         meta: { title: 'Reportes', icon: 'chart', noCache: false, roles: ['administrador', 'vendedor', 'consulta'] }
+    //     }, ]
     // },
+    {
+        path: '/informe',
+        component: Layout,
+        // redirect: '/informe/empresa',
+        alwaysShow: true, // will always show the root menu
+        name: 'informe',
+        meta: {
+            title: 'Informes',
+            icon: 'chart',
+            roles: ['administrador', 'vendedor', 'consulta'] // you can set roles in root nav
+        },
+        children: [
+            // {
+            //       path: 'page',
+            //       component: () =>
+            //           import ('@/views/permission/page'),
+            //       name: 'PagePermission',
+            //       meta: {
+            //           title: 'Page Permission',
+            //           roles: ['administrador', 'vendedor'] // or you can only set roles in sub nav
+            //       }
+            //   },
+            // {
+            //     path: 'directive',
+            //     component: () =>
+            //         import ('@/views/permission/directive'),
+            //     name: 'DirectivePermission',
+            //     meta: {
+            //         title: 'Directive Permission'
+            //             // if do not set roles, means: this page does not require permission
+            //     }
+            // },
+            {
+                path: 'pactivos',
+                component: () =>
+                    import ('@/views/informe/index'),
+                name: 'procesos_activos',
+                meta: {
+                    title: 'Facturación',
+                    icon: 'clipboard',
+                    roles: ['administrador', 'vendedor', 'consulta']
+                }
+            },
+        ]
+    },
     // {
     //     path: '/informe',
     //     component: Layout,

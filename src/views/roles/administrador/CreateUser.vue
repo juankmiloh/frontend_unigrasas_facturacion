@@ -54,7 +54,7 @@
                         autocomplete="off"
                         placeholder="Nombre"
                         clearable
-                        class="control-modal"
+                        class="control-modal-create-uer"
                       />
                     </el-form-item>
                   </el-col>
@@ -65,7 +65,7 @@
                         autocomplete="off"
                         placeholder="Apellido"
                         clearable
-                        class="control-modal"
+                        class="control-modal-create-uer"
                       />
                     </el-form-item>
                   </el-col>
@@ -76,7 +76,7 @@
                         autocomplete="off"
                         placeholder="Usuario"
                         clearable
-                        class="control-modal"
+                        class="control-modal-create-uer"
                       />
                     </el-form-item>
                   </el-col>
@@ -88,13 +88,13 @@
                         autocomplete="off"
                         placeholder="Contraseña"
                         clearable
-                        class="control-modal"
+                        class="control-modal-create-uer"
                       />
                     </el-form-item>
                   </el-col>
                   <el-col :span="24" :xs="24" style="border: 0px solid red;">
                     <el-form-item label="" prop="rol">
-                      <el-select v-model="formUsuario.rol" placeholder="Tipo de usuario" class="control-modal">
+                      <el-select v-model="formUsuario.rol" placeholder="Tipo de usuario" class="control-modal-create-uer">
                         <el-option
                           v-for="item in dataRoles"
                           :key="item.idrol"
@@ -109,7 +109,7 @@
                       <el-input
                         v-model="formUsuario.descripcion"
                         type="textarea"
-                        class="control-modal"
+                        class="control-modal-create-uer"
                         rows="3"
                         placeholder="Descripción"
                       />
@@ -118,6 +118,7 @@
                   <el-col :span="12" :xs="24" class="div-btn-save">
                     <el-form-item>
                       <el-button
+                        :loading="loading"
                         type="success"
                         @click="submitForm('formUsuario')"
                       >{{ textButton }}</el-button>
@@ -145,7 +146,7 @@ import { getListRol, createUser, updateUsuario } from '@/api/unigrasas/usuarios'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { CONSTANTS } from '@/constants/constants'
 import { DATA } from '@/data/ImgUser'
-import md5 from 'md5'
+// import md5 from 'md5'
 import ListaUsers from './components/user/ListaUsers'
 
 export default {
@@ -271,8 +272,9 @@ export default {
     },
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
-        if (!this.updateUSer) { // Si no actualiza usuario
+        if (!this.updateUSer) { // Si se crea usuario
           if (valid) {
+            this.loading = true
             const modelUser = this.formUsuario
             modelUser.token = `${modelUser.nickname}-token`
             modelUser.rol = Number(modelUser.rol)
@@ -290,6 +292,7 @@ export default {
               this.$refs[formName].resetFields()
               this.imageUrl = DATA.imageURL
               this.viewRefresh = { action: true }
+              this.loading = false
             })
             // this.$refs[formName].resetFields()
             // this.imageUrl = DATA.imageURL
@@ -299,12 +302,13 @@ export default {
             return false
           }
         } else { // Si se actualiza usuario
+          this.loading = true
           const modelUser = this.formUsuario
           modelUser.token = `${modelUser.nickname}-token`
           modelUser.genero = this.dataGenero.find((genero) => genero.nombre === modelUser.genero).idgenero
-          if (modelUser.contrasena !== '') {
-            modelUser.contrasena = md5(modelUser.contrasena)
-          }
+          // if (modelUser.contrasena !== '') {
+          //   modelUser.contrasena = md5(modelUser.contrasena)
+          // }
           // console.log('actualizar modelUser -> ', modelUser)
           await updateUsuario(modelUser).then(async(response) => {
             this.$notify({
@@ -315,7 +319,8 @@ export default {
               duration: 2000
             })
             this.$refs[formName].resetFields()
-            this.viewRefresh = { idusuario: modelUser.idusuario, action: true }
+            this.viewRefresh = await { idusuario: modelUser.idusuario, action: true }
+            this.loading = false
           })
           // this.formUsuario = CONSTANTS.formUser
           // this.$refs[formName].resetFields()
@@ -336,7 +341,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.control-modal {
+.control-modal-create-uer {
   width: 100%;
 }
 

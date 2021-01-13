@@ -19,7 +19,7 @@
     </sticky>
     <div
       class="createPost-container"
-      style="padding-top: 35px; padding-bottom: 20px; padding-left: 13px"
+      style="padding-top: 20px; padding-bottom: 20px; padding-left: 13px"
     >
       <el-form
         ref="modalform"
@@ -194,10 +194,6 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
 
 <style lang="scss">
 
