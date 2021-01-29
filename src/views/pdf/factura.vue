@@ -181,8 +181,8 @@
                 <td>{{ index + 1 }}</td>
                 <td>{{ item.coditem }}</td>
                 <td>{{ item.item }}</td>
-                <td>{{ item.cantidad }}</td>
-                <td>{{ item.precio }}</td>
+                <td>{{ item.cantidad | formatNumber }}</td>
+                <td>$ {{ item.precio | formatNumber }}</td>
                 <td>$ {{ item.cantidad * item.precio | formatNumber }}</td>
               </tr>
               <tr class="items-td-null">

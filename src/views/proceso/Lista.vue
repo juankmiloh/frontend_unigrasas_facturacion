@@ -411,8 +411,8 @@ export default {
       if (this.multipleSelection.length) {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['Numeración', 'Cliente', 'Creación (DD-MM-AA)', 'Total', 'Vendedor']
-          const filterVal = ['idfactura', 'cliente', 'f_emision', 'total', 'usuario']
+          const tHeader = ['Numeración', 'Cliente', 'Creación (DD-MM-AA)', 'Total', 'Vendedor', 'Estado']
+          const filterVal = ['idfactura', 'cliente', 'f_emision', 'total', 'usuario', 'nom_estado']
           const list = this.multipleSelection
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
