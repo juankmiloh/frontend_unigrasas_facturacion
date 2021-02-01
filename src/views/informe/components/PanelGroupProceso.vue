@@ -59,7 +59,7 @@
 
 <script>
 import CountTo from 'vue-count-to'
-import { getListCantidadProcesos } from '@/api/procesosDIEG/informes'
+import { getListCantidadProcesos } from '@/api/unigrasas/informes'
 
 export default {
   components: {

@@ -209,10 +209,10 @@ import Sticky from '@/components/Sticky' // 粘性header组件
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 import PanelGroupProceso from './components/PanelGroupProceso'
 import PieChart from './components/PieChart'
-import { getListProcesosEmpresa } from '@/api/procesosDIEG/informes'
-import { getListProcesosCausal } from '@/api/procesosDIEG/informes'
-import { getListProcesosEstado } from '@/api/procesosDIEG/informes'
-import { getListProcesosUsuario } from '@/api/procesosDIEG/informes'
+import { getListProcesosEmpresa } from '@/api/unigrasas/informes'
+import { getListProcesosCausal } from '@/api/unigrasas/informes'
+import { getListProcesosEstado } from '@/api/unigrasas/informes'
+import { getListProcesosUsuario } from '@/api/unigrasas/informes'
 import imgNotFound from '@/assets/not_found.png'
 import { getListClientes } from '@/api/unigrasas/clientes'
 
