@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="24" :sm="24" :lg="12" class="card-panel-col">
       <div class="card-panel" @click="handleSetPieChartData({item: 'servicio'})">
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon icon-class="people" class-name="card-panel-icon" />
@@ -9,12 +9,12 @@
           <div class="card-panel-text">
             Clientes
           </div>
-          <!-- <h2>{{ nombreServicio }}</h2> -->
+          <h2>{{ nombreServicio }}</h2>
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <!-- en curso -->
+    <!-- en curso -->
+    <!-- <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetPieChartData({item: 'fase', msg: 'en curso'})">
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon icon-class="form" class-name="card-panel-icon" />
@@ -26,9 +26,9 @@
           <count-to :start-val="0" :end-val="countActivos" :duration="5000" class="card-panel-num" />
         </div>
       </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <!-- Completadas -->
+    </el-col> -->
+    <!-- Completadas -->
+    <el-col :xs="24" :sm="24" :lg="12" class="card-panel-col">
       <div class="card-panel" @click="handleSetPieChartData({item: 'fase', msg: 'completadas'})">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="skill" class-name="card-panel-icon" />
@@ -41,7 +41,8 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <!-- anuladas -->
+    <!-- <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetPieChartData({item: 'fase', msg: 'anuladas'})">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="eye" class-name="card-panel-icon" />
@@ -53,7 +54,7 @@
           <count-to :start-val="0" :end-val="countEliminados" :duration="5000" class="card-panel-num" />
         </div>
       </div>
-    </el-col>
+    </el-col> -->
   </el-row>
 </template>
 
