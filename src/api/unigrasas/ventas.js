@@ -9,42 +9,42 @@ export function getListAnios() {
     });
 }
 
-export function getListMeses(ano) {
+export function getListMeses(data) {
     return request({
         url: '/ventas_lista_meses',
-        method: 'get',
-        params: { 'ano': ano }
+        method: 'post',
+        data
     });
 }
 
 export function getListClientes(data) {
     return request({
         url: '/ventas_clientes',
-        method: 'get',
-        params: data
+        method: 'post',
+        data
     });
 }
 
 export function getListUsuarios(data) {
     return request({
         url: '/ventas_usuarios',
-        method: 'get',
-        params: data
+        method: 'post',
+        data
     });
 }
 
 export function getListProductos(data) {
     return request({
         url: '/ventas_productos',
-        method: 'get',
-        params: data
+        method: 'post',
+        data
     });
 }
 
 export function getListVentas(data) {
     return request({
         url: '/ventas',
-        method: 'get',
-        params: data
+        method: 'post',
+        data
     });
 }

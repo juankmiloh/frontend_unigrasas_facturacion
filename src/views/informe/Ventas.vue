@@ -1,12 +1,17 @@
 <template>
   <div class="components-container">
-    <split-pane split="vertical" :min-percent="80" :default-percent="80" @resize="resize">
+    <split-pane split="vertical" :min-percent="75" :default-percent="75" @resize="resize">
       <template slot="paneL">
         <split-pane split="horizontal" :min-percent="30" :default-percent="30">
           <template slot="paneL">
             <div class="top-container">
               <div>
-                VENTAS TOTALES
+                VENTAS TOTALES <br><br>
+                Años - {{ selectAnos }} <br><br>
+                Meses - {{ selectMeses }} <br><br>
+                Clientes - {{ selectClientes }} <br><br>
+                Usuarios - {{ selectUsuarios }} <br><br>
+                Productos - {{ selectProductos }} <br><br>
               </div>
             </div>
           </template>
@@ -26,10 +31,22 @@
               <template slot="paneL">
                 <split-pane split="vertical">
                   <template slot="paneL">
-                    anos
+                    Años
+                    <tree-anos
+                      :datatree="listaAnos"
+                      nametree="anos"
+                      :loading="loadAnos"
+                      @selected="submitSelectAnos"
+                    />
                   </template>
                   <template slot="paneR">
-                    meses
+                    Meses
+                    <tree-meses
+                      :datatree="listaMeses"
+                      nametree="meses"
+                      :loading="loadMeses"
+                      @selected="submitSelectMeses"
+                    />
                   </template>
                 </split-pane>
               </template>
@@ -37,6 +54,12 @@
                 <div class="bottom-container">
                   <div>
                     CLIENTES
+                    <tree-clientes
+                      :datatree="listaClientes"
+                      nametree="clientes"
+                      :loading="loadClientes"
+                      @selected="submitSelectClientes"
+                    />
                   </div>
                 </div>
               </template>
@@ -47,14 +70,14 @@
               <template slot="paneL">
                 <div class="top-container">
                   <div>
-                    PRODUCTOS
+                    VENDEDORES
                   </div>
                 </div>
               </template>
               <template slot="paneR">
                 <div class="bottom-container">
                   <div>
-                    VENDEDORES
+                    PRODUCTOS
                   </div>
                 </div>
               </template>
@@ -69,42 +92,107 @@
 <script>
 import splitPane from 'vue-splitpane'
 import { getListAnios, getListMeses, getListClientes, getListUsuarios, getListProductos, getListVentas } from '@/api/unigrasas/ventas'
+import treeAnos from '@/components/TreeOptions'
+import treeMeses from '@/components/TreeOptions'
+import treeClientes from '@/components/TreeOptions'
 
 export default {
-  name: 'SplitpaneDemo',
-  components: { splitPane },
+  name: 'Ventas',
+  components: {
+    splitPane,
+    treeAnos,
+    treeMeses,
+    treeClientes
+  },
+  data() {
+    return {
+      listaAnos: [],
+      listaMeses: [],
+      listaClientes: [],
+      listaUsuarios: [],
+      listaProductos: [],
+      selectAnos: [],
+      selectMeses: [],
+      selectClientes: [],
+      selectUsuarios: [],
+      selectProductos: [],
+      loadAnos: true,
+      loadMeses: true,
+      loadClientes: true,
+      loadUsuarios: true
+    }
+  },
   created() {
     this.initView()
   },
   methods: {
+    submitSelectAnos(dataTree) {
+      // console.log('dataTreeAnos -> ', dataTree)
+      this.selectAnos = dataTree
+      if (this.selectAnos !== '') {
+        this.loadMeses = true
+        this.getMeses(this.selectAnos)
+      } else {
+        this.listaMeses = []
+        // this.listaClientes = []
+        this.loadMeses = true
+        // this.loadClientes = true
+      }
+    },
+    submitSelectMeses(dataTree) {
+      // console.log('dataTreeMeses -> ', dataTree)
+      this.selectMeses = dataTree
+      if (this.selectMeses !== '') {
+        this.loadClientes = true
+        this.getClientes()
+      } else {
+        // this.listaClientes = []
+        // this.loadClientes = true
+      }
+    },
+    submitSelectClientes(dataTree) {
+      console.log('dataTreeClientes -> ', dataTree)
+      this.selectClientes = dataTree
+      if (this.selectClientes !== '') {
+        this.loadUsuarios = true
+        // this.getUsuarios()
+      } else {
+        this.listaUsuarios = []
+        this.loadUsuarios = true
+      }
+    },
     resize() {
       console.log('resize')
     },
     initView() {
       this.getAnos()
-      this.getMeses()
-      this.getClientes()
-      this.getUsuarios()
-      this.getProductos()
-      this.getVentas()
+      // this.getUsuarios()
+      // this.getProductos()
+      // this.getVentas()
     },
     async getAnos() {
       await getListAnios().then((response) => {
-        console.log('LISTA ANOS -> ', response)
+        // console.log('LISTA ANOS -> ', response)
+        this.listaAnos = response
+        this.loadAnos = false
       })
     },
-    async getMeses() {
-      await getListMeses(2021).then((response) => {
-        console.log('LISTA MESES -> ', response)
+    async getMeses(anos) {
+      await getListMeses(anos).then((response) => {
+        // console.log('LISTA MESES -> ', response)
+        this.listaMeses = response
+        this.loadMeses = false
       })
     },
     async getClientes() {
       const data = {
-        ano: 2021,
-        mes: 3
+        ano: this.selectAnos,
+        mes: this.selectMeses
       }
       await getListClientes(data).then((response) => {
         console.log('LISTA CLIENTES -> ', response)
+        this.listaClientes = response
+        this.loadClientes = false
       })
     },
     async getUsuarios() {
@@ -115,6 +203,7 @@ export default {
       }
       await getListUsuarios(data).then((response) => {
         console.log('LISTA USUARIOS -> ', response)
+        this.listaUsuarios = response
       })
     },
     async getProductos() {
@@ -127,6 +216,7 @@ export default {
       }
       await getListProductos(data).then((response) => {
         console.log('LISTA PRODUCTOS -> ', response)
+        this.listaProductos = response
       })
     },
     async getVentas() {
