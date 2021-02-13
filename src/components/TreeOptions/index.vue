@@ -1,6 +1,9 @@
 <template>
   <div>
-    loading -> {{ loading }}
+    <el-input
+      v-model="filterText"
+      placeholder="Buscar"
+    />
     <el-tree
       ref="tree"
       v-loading="loading"
@@ -8,9 +11,9 @@
       show-checkbox
       node-key="id"
       :default-expanded-keys="[0]"
-      :default-checked-keys="[0]"
       :props="defaultProps"
       check-on-click-node
+      :filter-node-method="filterNode"
       @check-change="handleCheckChange"
     />
   </div>
@@ -39,23 +42,33 @@ export default {
         label: 'label'
       },
       nodoSelect: [],
-      count: 0
+      count: 0,
+      filterText: ''
     }
   },
   watch: {
     datatree: {
       deep: true,
       handler(val) {
+        // console.log(`Cambia datatree ${this.nametree} -> `, val)
         this.nodoSelect = []
       }
+    },
+    filterText(val) {
+      console.log(val.toUpperCase())
+      this.$refs.tree.filter(val.toUpperCase())
     }
   },
   updated() {
     this.getCheckedNodes()
   },
   methods: {
+    filterNode(value, data) {
+      if (!value) return true
+      return data.label.indexOf(value) !== -1
+    },
     getCheckedNodes() {
-      console.log(this.$refs.tree.getCheckedNodes())
+      // console.log(this.$refs.tree.getCheckedNodes())
     },
     handleCheckChange(data, checked, indeterminate) {
       // console.log(`${this.count}. data -> `, data)
@@ -71,7 +84,7 @@ export default {
         // console.log('Seleccionar todo')
         this.verifyNodo(data.id, checked)
         if (this.nodoSelect.length === this.datatree[0].total) {
-          this.$emit('selected', [0])
+          this.$emit('selected', this.nodoSelect)
         }
       } else if (!padreCheck && hijosChecked) { // Padre no seleccionado con hijos seleccionados
         // console.log('Seleccionar nodo')
@@ -79,7 +92,8 @@ export default {
         if (this.nodoSelect.length !== this.datatree[0].total && this.nodoSelect.length > 0) {
           this.$emit('selected', this.nodoSelect)
         } else {
-          this.$emit('selected', '')
+          // console.log('esta entrando aca -> ', this.nametree, ' nodo -> ', data.id)
+          this.$emit('selected', [])
         }
       } else if (!padreCheck && !hijosChecked) { // Padre no seleccionado e hijos no seleccionados
         // console.log('No seleccionar nada')
@@ -87,7 +101,7 @@ export default {
         if (checked) { // Nodo !== 0 seleccionado
           this.$emit('selected', this.nodoSelect)
         } else {
-          this.$emit('selected', '')
+          this.$emit('selected', [])
         }
       }
       this.count++

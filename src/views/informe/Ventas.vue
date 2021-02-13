@@ -6,7 +6,7 @@
           <template slot="paneL">
             <div class="top-container">
               <div>
-                VENTAS TOTALES <br><br>
+                VENTAS TOTALES - ${{ ventas | formatNumber }}<br><br>
                 Años - {{ selectAnos }} <br><br>
                 Meses - {{ selectMeses }} <br><br>
                 Clientes - {{ selectClientes }} <br><br>
@@ -31,36 +31,38 @@
               <template slot="paneL">
                 <split-pane split="vertical">
                   <template slot="paneL">
-                    Años
-                    <tree-anos
-                      :datatree="listaAnos"
-                      nametree="anos"
-                      :loading="loadAnos"
-                      @selected="submitSelectAnos"
-                    />
+                    <div class="bottom-container">
+                      Años
+                      <tree-anos
+                        :datatree="listaAnos"
+                        nametree="anos"
+                        :loading="loadAnos"
+                        @selected="submitSelectAnos"
+                      />
+                    </div>
                   </template>
                   <template slot="paneR">
-                    Meses
-                    <tree-meses
-                      :datatree="listaMeses"
-                      nametree="meses"
-                      :loading="loadMeses"
-                      @selected="submitSelectMeses"
-                    />
+                    <div class="bottom-container">
+                      Meses
+                      <tree-meses
+                        :datatree="listaMeses"
+                        nametree="meses"
+                        :loading="loadMeses"
+                        @selected="submitSelectMeses"
+                      />
+                    </div>
                   </template>
                 </split-pane>
               </template>
               <template slot="paneR">
                 <div class="bottom-container">
-                  <div>
-                    CLIENTES
-                    <tree-clientes
-                      :datatree="listaClientes"
-                      nametree="clientes"
-                      :loading="loadClientes"
-                      @selected="submitSelectClientes"
-                    />
-                  </div>
+                  CLIENTES
+                  <tree-clientes
+                    :datatree="listaClientes"
+                    nametree="clientes"
+                    :loading="loadClientes"
+                    @selected="submitSelectClientes"
+                  />
                 </div>
               </template>
             </split-pane>
@@ -69,16 +71,24 @@
             <split-pane split="horizontal">
               <template slot="paneL">
                 <div class="top-container">
-                  <div>
-                    VENDEDORES
-                  </div>
+                  VENDEDORES
+                  <tree-usuarios
+                    :datatree="listaUsuarios"
+                    nametree="usuarios"
+                    :loading="loadUsuarios"
+                    @selected="submitSelectUsuarios"
+                  />
                 </div>
               </template>
               <template slot="paneR">
                 <div class="bottom-container">
-                  <div>
-                    PRODUCTOS
-                  </div>
+                  PRODUCTOS
+                  <tree-productos
+                    :datatree="listaProductos"
+                    nametree="productos"
+                    :loading="loadProductos"
+                    @selected="submitSelectProductos"
+                  />
                 </div>
               </template>
             </split-pane>
@@ -91,10 +101,12 @@
 
 <script>
 import splitPane from 'vue-splitpane'
-import { getListAnios, getListMeses, getListClientes, getListUsuarios, getListProductos, getListVentas } from '@/api/unigrasas/ventas'
+import { getListAnios, getListMeses, getListClientes, getListUsuarios, getListProductos, getListVentasAno, getListVentasAnoMes } from '@/api/unigrasas/ventas'
 import treeAnos from '@/components/TreeOptions'
 import treeMeses from '@/components/TreeOptions'
 import treeClientes from '@/components/TreeOptions'
+import treeUsuarios from '@/components/TreeOptions'
+import treeProductos from '@/components/TreeOptions'
 
 export default {
   name: 'Ventas',
@@ -102,7 +114,9 @@ export default {
     splitPane,
     treeAnos,
     treeMeses,
-    treeClientes
+    treeClientes,
+    treeUsuarios,
+    treeProductos
   },
   data() {
     return {
@@ -117,9 +131,11 @@ export default {
       selectUsuarios: [],
       selectProductos: [],
       loadAnos: true,
-      loadMeses: true,
-      loadClientes: true,
-      loadUsuarios: true
+      loadMeses: false,
+      loadClientes: false,
+      loadUsuarios: false,
+      loadProductos: false,
+      ventas: 0
     }
   },
   created() {
@@ -129,106 +145,146 @@ export default {
     submitSelectAnos(dataTree) {
       // console.log('dataTreeAnos -> ', dataTree)
       this.selectAnos = dataTree
-      if (this.selectAnos !== '') {
+      if (this.selectAnos.length) {
         this.loadMeses = true
         this.getMeses(this.selectAnos)
       } else {
         this.listaMeses = []
-        // this.listaClientes = []
-        this.loadMeses = true
-        // this.loadClientes = true
+        this.selectMeses = []
+        this.resetTrees()
       }
     },
     submitSelectMeses(dataTree) {
       // console.log('dataTreeMeses -> ', dataTree)
       this.selectMeses = dataTree
-      if (this.selectMeses !== '') {
-        this.loadClientes = true
-        this.getClientes()
+      if (this.selectMeses.length) {
+        this.getClientes([0])
+        this.getUsuarios([0])
+        this.getProductos([0], [0], [0])
+        this.getVentasAno([0], [0], [0])
       } else {
-        // this.listaClientes = []
-        // this.loadClientes = true
+        this.resetTrees()
       }
     },
     submitSelectClientes(dataTree) {
-      console.log('dataTreeClientes -> ', dataTree)
+      // console.log('dataTreeClientes -> ', dataTree)
       this.selectClientes = dataTree
-      if (this.selectClientes !== '') {
-        this.loadUsuarios = true
-        // this.getUsuarios()
-      } else {
-        this.listaUsuarios = []
-        this.loadUsuarios = true
-      }
+    },
+    submitSelectUsuarios(dataTree) {
+      // console.log('dataTreeUsuarios -> ', dataTree)
+      this.selectUsuarios = dataTree
+    },
+    submitSelectProductos(dataTree) {
+      // console.log('dataTreeProductos -> ', dataTree)
+      this.selectProductos = dataTree
+    },
+    resetTrees() {
+      this.listaClientes = []
+      this.selectClientes = []
+      this.listaUsuarios = []
+      this.selectUsuarios = []
+      this.listaProductos = []
+      this.selectProductos = []
+      this.ventas = 0
     },
     resize() {
       console.log('resize')
     },
     initView() {
       this.getAnos()
-      // this.getUsuarios()
-      // this.getProductos()
-      // this.getVentas()
     },
     async getAnos() {
       await getListAnios().then((response) => {
         // console.log('LISTA ANOS -> ', response)
-        this.listaAnos = response
+        if (response[0]['children'].length) {
+          this.listaAnos = response
+        }
         this.loadAnos = false
       })
     },
     async getMeses(anos) {
       await getListMeses(anos).then((response) => {
         // console.log('LISTA MESES -> ', response)
-        this.listaMeses = response
+        if (response[0]['children'].length) {
+          this.listaMeses = response
+        }
         this.loadMeses = false
       })
     },
-    async getClientes() {
+    async getClientes(usuarios) {
+      this.loadClientes = true
       const data = {
+        usuario: usuarios,
         ano: this.selectAnos,
         mes: this.selectMeses
       }
       await getListClientes(data).then((response) => {
-        console.log('LISTA CLIENTES -> ', response)
-        this.listaClientes = response
+        // console.log('LISTA CLIENTES -> ', response)
+        if (response[0]['children'].length) {
+          this.listaClientes = response
+        }
         this.loadClientes = false
       })
     },
-    async getUsuarios() {
+    async getUsuarios(clientes) {
+      this.loadUsuarios = true
       const data = {
-        cliente: 0,
-        ano: 2021,
-        mes: 0
+        cliente: clientes,
+        ano: this.selectAnos,
+        mes: this.selectMeses
       }
       await getListUsuarios(data).then((response) => {
-        console.log('LISTA USUARIOS -> ', response)
-        this.listaUsuarios = response
+        // console.log('LISTA USUARIOS -> ', response)
+        if (response[0]['children'].length) {
+          this.listaUsuarios = response
+        }
+        this.loadUsuarios = false
       })
     },
-    async getProductos() {
+    async getProductos(clientes, usuarios, productos) {
+      this.loadProductos = true
       const data = {
-        cliente: 5,
-        usuario: 3,
-        ano: 2021,
-        mes: 0,
-        producto: 0
+        cliente: clientes,
+        usuario: usuarios,
+        ano: this.selectAnos,
+        mes: this.selectMeses,
+        producto: productos
       }
       await getListProductos(data).then((response) => {
         console.log('LISTA PRODUCTOS -> ', response)
-        this.listaProductos = response
+        if (response[0]['children'].length) {
+          this.listaProductos = response
+        }
+        this.loadProductos = false
       })
     },
-    async getVentas() {
+    async getVentasAno(clientes, usuarios, productos) {
+      this.ventas = 0
       const data = {
-        cliente: 0,
-        usuario: 0,
-        ano: 0,
-        mes: 0,
-        producto: 0
+        cliente: clientes,
+        usuario: usuarios,
+        ano: this.selectAnos,
+        mes: this.selectMeses,
+        producto: productos
       }
-      await getListVentas(data).then((response) => {
-        console.log('LISTA VENTAS -> ', response)
+      await getListVentasAno(data).then((response) => {
+        console.log('LISTA VENTAS ANO -> ', response)
+        for (const iterator of response) {
+          this.ventas = iterator.venta + this.ventas
+        }
+      })
+    },
+    async getVentasAnoMes(clientes, usuarios, productos) {
+      const data = {
+        cliente: clientes,
+        usuario: usuarios,
+        ano: this.selectAnos,
+        mes: this.selectMeses,
+        producto: productos
+      }
+      await getListVentasAnoMes(data).then((response) => {
+        console.log('LISTA VENTAS ANO MES -> ', response)
+        this.ventas = response
       })
     }
   }

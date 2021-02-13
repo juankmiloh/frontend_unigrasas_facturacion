@@ -41,9 +41,17 @@ export function getListProductos(data) {
     });
 }
 
-export function getListVentas(data) {
+export function getListVentasAno(data) {
     return request({
-        url: '/ventas',
+        url: '/ventas_ano',
+        method: 'post',
+        data
+    });
+}
+
+export function getListVentasAnoMes(data) {
+    return request({
+        url: '/ventas_ano_mes',
         method: 'post',
         data
     });
