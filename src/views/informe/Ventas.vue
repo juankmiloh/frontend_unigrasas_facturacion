@@ -2,27 +2,43 @@
   <div class="components-container">
     <split-pane split="vertical" :min-percent="75" :default-percent="75" @resize="resize">
       <template slot="paneL">
-        <split-pane split="horizontal" :min-percent="30" :default-percent="30">
-          <template slot="paneL">
-            <div class="top-container">
-              <div>
-                VENTAS TOTALES - ${{ ventas | formatNumber }}<br><br>
-                Años - {{ selectAnos }} <br><br>
-                Meses - {{ selectMeses }} <br><br>
-                Clientes - {{ selectClientes }} <br><br>
-                Usuarios - {{ selectUsuarios }} <br><br>
-                Productos - {{ selectProductos }} <br><br>
-              </div>
-            </div>
-          </template>
-          <template slot="paneR">
-            <div class="bottom-container">
-              <div>
-                VENTAS DISCRIMINADAS
-              </div>
-            </div>
-          </template>
-        </split-pane>
+        <div style="border: 2px solid #53a6ac; height: 100%; overflow: auto;">
+          <split-pane split="horizontal" @resize="resize">
+            <template slot="paneL">
+              <split-pane split="horizontal">
+                <template slot="paneL">
+                  <div class="pane-container-dashboard">
+                    VENTAS TOTALES - ${{ ventas | formatNumber }}<br><br>
+                    Años - {{ selectAnos }} <br><br>
+                    Meses - {{ selectMeses }} <br><br>
+                    Clientes - {{ selectClientes }} <br><br>
+                    Usuarios - {{ selectUsuarios }} <br><br>
+                    Productos - {{ selectProductos }} <br><br>
+                  </div>
+                </template>
+                <template slot="paneR">
+                  <div class="pane-container-dashboard">
+                    B
+                  </div>
+                </template>
+              </split-pane>
+            </template>
+            <template slot="paneR">
+              <split-pane split="horizontal">
+                <template slot="paneL">
+                  <div class="pane-container-dashboard">
+                    C
+                  </div>
+                </template>
+                <template slot="paneR">
+                  <div class="pane-container-dashboard">
+                    D
+                  </div>
+                </template>
+              </split-pane>
+            </template>
+          </split-pane>
+        </div>
       </template>
       <template slot="paneR">
         <split-pane split="horizontal">
@@ -31,22 +47,20 @@
               <template slot="paneL">
                 <split-pane split="vertical">
                   <template slot="paneL">
-                    <div class="bottom-container">
-                      Años
+                    <div class="pane-container-tree">
                       <tree-anos
                         :datatree="listaAnos"
-                        nametree="anos"
+                        nametree="año"
                         :loading="loadAnos"
                         @selected="submitSelectAnos"
                       />
                     </div>
                   </template>
                   <template slot="paneR">
-                    <div class="bottom-container">
-                      Meses
+                    <div class="pane-container-tree">
                       <tree-meses
                         :datatree="listaMeses"
-                        nametree="meses"
+                        nametree="mes"
                         :loading="loadMeses"
                         @selected="submitSelectMeses"
                       />
@@ -55,8 +69,7 @@
                 </split-pane>
               </template>
               <template slot="paneR">
-                <div class="bottom-container">
-                  CLIENTES
+                <div class="pane-container-tree">
                   <tree-clientes
                     :datatree="listaClientes"
                     nametree="clientes"
@@ -68,26 +81,24 @@
             </split-pane>
           </template>
           <template slot="paneR">
-            <split-pane split="horizontal">
+            <split-pane split="horizontal" @resize="resize">
               <template slot="paneL">
-                <div class="top-container">
-                  VENDEDORES
-                  <tree-usuarios
-                    :datatree="listaUsuarios"
-                    nametree="usuarios"
-                    :loading="loadUsuarios"
-                    @selected="submitSelectUsuarios"
-                  />
-                </div>
-              </template>
-              <template slot="paneR">
-                <div class="bottom-container">
-                  PRODUCTOS
+                <div class="pane-container-tree">
                   <tree-productos
                     :datatree="listaProductos"
                     nametree="productos"
                     :loading="loadProductos"
                     @selected="submitSelectProductos"
+                  />
+                </div>
+              </template>
+              <template slot="paneR">
+                <div class="pane-container-tree">
+                  <tree-usuarios
+                    :datatree="listaUsuarios"
+                    nametree="vendedores"
+                    :loading="loadUsuarios"
+                    @selected="submitSelectUsuarios"
                   />
                 </div>
               </template>
@@ -100,7 +111,6 @@
 </template>
 
 <script>
-import splitPane from 'vue-splitpane'
 import { getListAnios, getListMeses, getListClientes, getListUsuarios, getListProductos, getListVentasAno, getListVentasAnoMes } from '@/api/unigrasas/ventas'
 import treeAnos from '@/components/TreeOptions'
 import treeMeses from '@/components/TreeOptions'
@@ -111,7 +121,6 @@ import treeProductos from '@/components/TreeOptions'
 export default {
   name: 'Ventas',
   components: {
-    splitPane,
     treeAnos,
     treeMeses,
     treeClientes,
@@ -154,7 +163,7 @@ export default {
         this.resetTrees()
       }
     },
-    submitSelectMeses(dataTree) {
+    async submitSelectMeses(dataTree) {
       // console.log('dataTreeMeses -> ', dataTree)
       this.selectMeses = dataTree
       if (this.selectMeses.length) {
@@ -293,28 +302,24 @@ export default {
 
 <style scoped>
   .components-container {
+    position: relative;
     margin: 0%;
     width: 100%;
     height: 89vh;
+    /* border: 1px solid red; */
   }
 
-  .top-container {
-    background-color: #FCE38A;
+  .pane-container-dashboard {
+    /* border: 1px solid red; */
+    background-color: #f8f4f7;
     width: 100%;
-    height: 100%;
+    height: auto;
     overflow: auto;
+    position: relative;
   }
 
-  .bottom-container {
-    background-color: #95E1D3;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-  }
-
-  .right-container {
-    background-color: #F38181;
-    width: 100%;
+  .pane-container-tree {
+    border: 0px solid blue;
     height: 100%;
   }
 </style>

@@ -23,6 +23,10 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
+import splitPane from 'vue-splitpane'
+
+Vue.component('split-pane', splitPane);
+
 // import 'vue-awesome/icons'
 // import Icon from 'vue-awesome/components/Icon'
 
@@ -62,6 +66,10 @@ i18n.locale = Cookies.get('language') ? Cookies.get('language') : 'es',
 // })
 
 // Vue.component('v-icon', Icon)
+
+if (typeof window !== 'undefined' && window.Vue) {
+    window.Vue.component('split-pane', Splitpane)
+}
 
 new Vue({
     el: '#app',

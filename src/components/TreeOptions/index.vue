@@ -1,22 +1,34 @@
 <template>
-  <div>
-    <el-input
-      v-model="filterText"
-      placeholder="Buscar"
-    />
-    <el-tree
-      ref="tree"
-      v-loading="loading"
-      :data="datatree"
-      show-checkbox
-      node-key="id"
-      :default-expanded-keys="[0]"
-      :props="defaultProps"
-      check-on-click-node
-      :filter-node-method="filterNode"
-      @check-change="handleCheckChange"
-    />
-  </div>
+  <el-row style="border: 0px solid red; height: 100%;">
+    <el-col :span="24" class="pane-tree-options">
+      <div class="pane-fixed-options">
+        <div class="pane-text-options">
+          <label>{{ nametree | uppercase }}</label>
+        </div>
+        <el-input
+          v-if="datatree.length"
+          v-model="filterText"
+          placeholder="Buscar"
+          prefix-icon="el-icon-search"
+        />
+      </div>
+    </el-col>
+    <el-col :span="24" style="height: 100%; background: #f7d9cd;">
+      <el-tree
+        ref="tree"
+        v-loading="loading"
+        :data="datatree"
+        show-checkbox
+        node-key="id"
+        :default-expanded-keys="[0]"
+        :props="defaultProps"
+        check-on-click-node
+        :filter-node-method="filterNode"
+        style="z-index: 1; background: #f7d9cd; height: 100%; overflow: auto;"
+        @check-change="handleCheckChange"
+      />
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -28,7 +40,7 @@ export default {
     },
     nametree: {
       type: String,
-      default: ''
+      default: null
     },
     loading: {
       type: Boolean,
@@ -126,3 +138,25 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .pane-tree-options {
+    background-color: #f7d9cd;
+    width: 100%;
+  }
+
+  .pane-fixed-options {
+    z-index: 1;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+  }
+
+  .pane-text-options {
+    padding: 4px;
+    border: 1px solid #4CAF50;
+    text-align: center;
+    background: #303133;
+    color: white;
+  }
+</style>
