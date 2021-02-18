@@ -285,7 +285,7 @@ export const asyncRoutes = [{
     {
         path: '/informe',
         component: Layout,
-        // redirect: '/informe/empresa',
+        redirect: '/dashboard',
         alwaysShow: true, // will always show the root menu
         name: 'informe',
         meta: {

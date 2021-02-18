@@ -24,7 +24,7 @@
         :props="defaultProps"
         check-on-click-node
         :filter-node-method="filterNode"
-        style="z-index: 1; background: #f7d9cd; height: 100%; overflow: auto;"
+        class="tree-class"
         @check-change="handleCheckChange"
       />
     </el-col>
@@ -158,5 +158,12 @@ export default {
     text-align: center;
     background: #303133;
     color: white;
+  }
+
+  .tree-class {
+    z-index: 1;
+    background: #f7d9cd;
+    height: 100%;
+    overflow: auto;
   }
 </style>
