@@ -67,7 +67,7 @@ export default {
       }
     },
     filterText(val) {
-      console.log(val.toUpperCase())
+      // console.log(val.toUpperCase())
       this.$refs.tree.filter(val.toUpperCase())
     }
   },
@@ -84,7 +84,7 @@ export default {
     },
     handleCheckChange(data, checked, indeterminate) {
       // console.log(`${this.count}. data -> `, data)
-      // console.log(`${this.count}. Nodo -> ${data.id} ---- checked -> ${checked} ---- indeterminate -> ${indeterminate}`)
+      // console.log(`${this.count}. Nodo -> ${data.id} ---- checked -> ${checked} ---- hijos -> ${indeterminate}`)
       if (data.id === 0) {
         window.localStorage.setItem(`padre_checked_${this.nametree}`, JSON.stringify(checked))
         window.localStorage.setItem(`hijos_checked_${this.nametree}`, JSON.stringify(indeterminate))
@@ -109,12 +109,8 @@ export default {
         }
       } else if (!padreCheck && !hijosChecked) { // Padre no seleccionado e hijos no seleccionados
         // console.log('No seleccionar nada')
-        this.verifyNodo(data.id, checked)
-        if (checked) { // Nodo !== 0 seleccionado
-          this.$emit('selected', this.nodoSelect)
-        } else {
-          this.$emit('selected', [])
-        }
+        this.nodoSelect = []
+        window.localStorage.setItem(`hijos_checked_${this.nametree}`, JSON.stringify(true))
       }
       this.count++
     },

@@ -1,48 +1,53 @@
 <template>
-  <el-row style="border: 0px solid red; height: 100%;">
+  <el-row class="container-table">
     <el-col :span="24">
       <el-row class="pane-container-text">
-        <el-col :span="18"><label>VENTAS X {{ nametable | uppercase }}</label></el-col>
-        <el-col :span="6">
-          <el-button :loading="downloadLoading" style="border: 1px solid #67C23A;" size="mini" type="success" plain icon="el-icon-download" @click="handleDownload">
-            <span><b>Exportar a Excel</b></span>
-          </el-button>
+        <el-col :xs="24"><label>VENTAS X {{ nametable | uppercase }}</label></el-col>
+        <el-col :xs="24" style="text-align: right;">
+          <transition name="el-zoom-in-center">
+            <el-button v-show="show" :loading="downloadLoading" style="border: 1px solid #67C23A;" size="mini" type="success" plain icon="el-icon-download" @click="handleDownload">
+              <span><b>Exportar a Excel</b></span>
+            </el-button>
+          </transition>
         </el-col>
       </el-row>
     </el-col>
-    <el-col :span="24" style="border: 0px solid green; height: 100%;">
-      <el-table
-        ref="tableComponent"
-        v-loading="loading"
-        :data="datatable"
-        height="93%"
-        element-loading-text=""
-        border
-        show-summary
-        :summary-method="getSummaries"
-        fit
-        size="mini"
-        highlight-current-row
-        class="table-class"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" align="center" />
-        <el-table-column
-          v-for="column in tableColumns"
-          :key="column.label"
-          :label="column.label"
-          :prop="column.prop"
-          :width="x.matches ? column.width_xs : column.width"
-          align="center"
-          sortable
+    <el-col v-loading="loading" :span="24" style="border: 0px solid green; height: 85%;">
+      <transition name="el-fade-in-linear">
+        <el-table
+          v-show="!loading && tablecolumns.length"
+          ref="tableComponent"
+          :data="datatable"
+          height="96%"
+          border
+          show-summary
+          :summary-method="getSummaries"
+          fit
+          size="mini"
+          highlight-current-row
+          class="table-class"
+          @selection-change="handleSelectionChange"
         >
-          <template slot-scope="scope">
-            <div v-if="column.prop === 'precio' || column.prop === 'total'">$ {{ scope.row[column.prop] | formatNumber }}</div>
-            <div v-else-if="column.prop === 'cantidad'">{{ scope.row[column.prop] | formatNumber }}</div>
-            <div v-else>{{ scope.row[column.prop] }}</div>
-          </template>
-        </el-table-column>
-      </el-table>
+          <el-table-column type="selection" align="center" />
+          <el-table-column
+            v-for="column in tablecolumns"
+            :key="column.label"
+            :label="column.label"
+            :prop="column.prop"
+            :width="x.matches ? column.width_xs : column.width"
+            align="center"
+            sortable
+          >
+            <template slot-scope="scope">
+              <div v-if="column.prop === 'label'"><el-tag type="primary" size="mini">{{ scope.row[column.prop] | uppercaseFirst }}</el-tag></div>
+              <div v-else-if="column.prop === 'precio' || column.prop === 'total'">$ {{ scope.row[column.prop] | formatNumber }}</div>
+              <div v-else-if="column.prop === 'cantidad'">{{ scope.row[column.prop] | formatNumber }}</div>
+              <div v-else>{{ scope.row[column.prop] }}</div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </transition>
+      <div v-if="!tablecolumns.length" class="msg-not-data"><div>Sin Datos</div></div>
     </el-col>
   </el-row>
 </template>
@@ -52,6 +57,10 @@ import moment from 'moment'
 export default {
   props: {
     datatable: {
+      type: Array,
+      default: null
+    },
+    tablecolumns: {
       type: Array,
       default: null
     },
@@ -70,30 +79,7 @@ export default {
       downloadLoading: false,
       multipleSelection: [],
       filename: '',
-      tableColumns: [{
-        label: 'Producto',
-        prop: 'label',
-        width: '270',
-        width_xs: ''
-      },
-      {
-        label: 'Cantidad',
-        prop: 'cantidad',
-        width: '',
-        width_xs: ''
-      },
-      {
-        label: 'Total',
-        prop: 'total',
-        width: '',
-        width_xs: ''
-      },
-      {
-        label: 'Promedio',
-        prop: 'precio',
-        width: '',
-        width_xs: ''
-      }],
+      show: false,
       x: '',
       currentDate: moment(new Date()).format('DDMMYYYY')
     }
@@ -103,6 +89,11 @@ export default {
       deep: true,
       handler(val) {
         // console.log(`Cambia datatable -> ${this.nametable}`, val)
+        if (val.length) {
+          this.show = true
+        } else {
+          this.show = false
+        }
       }
     }
   },
@@ -121,8 +112,15 @@ export default {
       if (this.multipleSelection.length) {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['Producto', 'Cantidad', 'Total', 'Promedio']
-          const filterVal = ['label', 'cantidad', 'total', 'precio']
+          let tHeader = []
+          let filterVal = []
+          if (this.nametable === 'producto') {
+            tHeader = ['Nombre', 'Cantidad', 'Total', 'Promedio']
+            filterVal = ['label', 'cantidad', 'total', 'precio']
+          } else {
+            tHeader = ['Nombre', 'Cantidad', 'Total']
+            filterVal = ['label', 'cantidad', 'total']
+          }
           const list = this.multipleSelection
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
@@ -136,7 +134,7 @@ export default {
         })
       } else {
         this.$message({
-          message: 'Seleccione al menos una fila',
+          message: `Seleccione al menos un ${this.nametable}`,
           type: 'warning'
         })
       }
@@ -184,20 +182,43 @@ export default {
 </script>
 
 <style scoped>
+  .container-table {
+    width: 100%;
+    height: 100%;
+    box-shadow: 1px 1px 4px 1px #DCDFE6;
+    border: 1px solid #F2F6FC;
+    border-radius: 4px;
+  }
+
   .pane-container-text {
-    padding: 4px;
+    padding: 3px 3px 3px 23px;
     border: 0px solid #4CAF50;
-    text-align: center;
+    /* text-align: justify; */
     background: #E1835F;
     color: white;
     display: flex;
     align-items: center;
+    border-radius: 4px 4px 0px 0px;
+    height: 2.3em;
+  }
+
+  .msg-not-data {
+    border: 0px solid red;
+    background: white;
+    color: #C0C4CC;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: small;
+    width: 100%;
+    height: 90%;
   }
 
   .table-class {
     z-index: 0;
     width: 100%;
-    border: 1px solid #d8ebff;
+    border: 1px solid #F2F6FC;
+    border-radius: 0px 0px 4px 4px;
   }
 
   /* width */

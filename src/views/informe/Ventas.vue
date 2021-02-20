@@ -1,17 +1,16 @@
 <template>
   <div class="components-container">
-    <split-pane split="vertical" :min-percent="74" :default-percent="74" @resize="resize">
+    <split-pane split="vertical" :min-percent="0" :default-percent="74" @resize="resize">
       <template slot="paneL">
         <div style="border: 2px solid #53a6ac; height: 100%;">
-          <split-pane split="horizontal" @resize="resize">
+          <split-pane split="horizontal" :min-percent="5" :default-percent="50" @resize="resize">
             <template slot="paneL">
               <div style="height: 100%;">
-                <split-pane split="horizontal">
+                <split-pane split="horizontal" :min-percent="5" :default-percent="45">
                   <template slot="paneL">
                     <div class="pane-container-dashboard">
                       VENTAS TOTALES - ${{ ventas | formatNumber }}<br><br>
-                      Años - {{ selectAnos }} <br><br>
-                      Meses - {{ selectMeses }} <br><br>
+                      Años - {{ selectAnos }} | Meses - {{ selectMeses }} <br><br>
                       Clientes - {{ selectClientes }} <br><br>
                       Usuarios - {{ selectUsuarios }} <br><br>
                       Productos - {{ selectProductos }} <br><br>
@@ -19,18 +18,25 @@
                   </template>
                   <template slot="paneR">
                     <div class="pane-container-dashboard">
-                      <el-row style="height: 100%;">
-                        <el-col :span="8" style="height: 100%;">
-                          <label>Gráfica</label>
-                        </el-col>
-                        <el-col :span="16" style="height: 100%;">
-                          <table-productos
-                            nametable="producto"
-                            :datatable="tableDataProductos"
-                            :loading="loadProductos"
-                          />
-                        </el-col>
-                      </el-row>
+                      <div style="height: 100%;">
+                        <split-pane split="vertical" :min-percent="0" :default-percent="65">
+                          <template slot="paneL">
+                            <div class="pane-container-dashboard" style="padding: 10px;">
+                              <table-productos
+                                nametable="producto"
+                                :datatable="tableDataProductos"
+                                :tablecolumns="tableColumnProductos"
+                                :loading="loadProductos"
+                              />
+                            </div>
+                          </template>
+                          <template slot="paneR">
+                            <div class="pane-container-dashboard">
+                              <label>Gráfica</label>
+                            </div>
+                          </template>
+                        </split-pane>
+                      </div>
                     </div>
                   </template>
                 </split-pane>
@@ -38,21 +44,51 @@
             </template>
             <template slot="paneR">
               <div style="height: 100%;">
-                <split-pane split="horizontal">
+                <split-pane split="horizontal" :min-percent="5" :default-percent="50">
                   <template slot="paneL">
                     <div class="pane-container-dashboard">
-                      <table-productos
-                        nametable="cliente"
-                        :loading="loadClientes"
-                      />
+                      <div style="height: 100%;">
+                        <split-pane split="vertical" :min-percent="0" :default-percent="65">
+                          <template slot="paneL">
+                            <div class="pane-container-dashboard" style="padding: 10px;">
+                              <table-clientes
+                                nametable="cliente"
+                                :datatable="tableDataClientes"
+                                :tablecolumns="tableColumnClientes"
+                                :loading="loadClientes"
+                              />
+                            </div>
+                          </template>
+                          <template slot="paneR">
+                            <div class="pane-container-dashboard">
+                              <label>Gráfica</label>
+                            </div>
+                          </template>
+                        </split-pane>
+                      </div>
                     </div>
                   </template>
                   <template slot="paneR">
                     <div class="pane-container-dashboard">
-                      <table-productos
-                        nametable="vendedor"
-                        :loading="loadUsuarios"
-                      />
+                      <div style="height: 100%;">
+                        <split-pane split="vertical" :min-percent="0" :default-percent="65">
+                          <template slot="paneL">
+                            <div class="pane-container-dashboard" style="padding: 10px;">
+                              <table-usuarios
+                                nametable="vendedor"
+                                :datatable="tableDataUsuarios"
+                                :tablecolumns="tableColumnUsuarios"
+                                :loading="loadUsuarios"
+                              />
+                            </div>
+                          </template>
+                          <template slot="paneR">
+                            <div class="pane-container-dashboard">
+                              <label>Gráfica</label>
+                            </div>
+                          </template>
+                        </split-pane>
+                      </div>
                     </div>
                   </template>
                 </split-pane>
@@ -69,7 +105,7 @@
                 <split-pane split="horizontal">
                   <template slot="paneL">
                     <div style="height: 100%;">
-                      <split-pane split="vertical">
+                      <split-pane split="vertical" :min-percent="0" :default-percent="50">
                         <template slot="paneL">
                           <div class="pane-container-dashboard">
                             <tree-anos
@@ -95,11 +131,11 @@
                   </template>
                   <template slot="paneR">
                     <div class="pane-container-dashboard">
-                      <tree-clientes
-                        :datatree="listaClientes"
-                        nametree="clientes"
-                        :loading="loadClientes"
-                        @selected="submitSelectClientes"
+                      <tree-productos
+                        :datatree="listaProductos"
+                        nametree="productos"
+                        :loading="loadProductos"
+                        @selected="submitSelectProductos"
                       />
                     </div>
                   </template>
@@ -111,11 +147,11 @@
                 <split-pane split="horizontal">
                   <template slot="paneL">
                     <div class="pane-container-dashboard">
-                      <tree-productos
-                        :datatree="listaProductos"
-                        nametree="productos"
-                        :loading="loadProductos"
-                        @selected="submitSelectProductos"
+                      <tree-clientes
+                        :datatree="listaClientes"
+                        nametree="clientes"
+                        :loading="loadClientes"
+                        @selected="submitSelectClientes"
                       />
                     </div>
                   </template>
@@ -147,6 +183,8 @@ import treeClientes from '@/components/TreeOptions'
 import treeUsuarios from '@/components/TreeOptions'
 import treeProductos from '@/components/TreeOptions'
 import tableProductos from '@/components/Table'
+import tableClientes from '@/components/Table'
+import tableUsuarios from '@/components/Table'
 
 export default {
   name: 'Ventas',
@@ -156,7 +194,9 @@ export default {
     treeClientes,
     treeUsuarios,
     treeProductos,
-    tableProductos
+    tableProductos,
+    tableClientes,
+    tableUsuarios
   },
   data() {
     return {
@@ -176,7 +216,12 @@ export default {
       loadUsuarios: false,
       loadProductos: false,
       ventas: 0,
-      tableDataProductos: []
+      tableDataProductos: [],
+      tableColumnProductos: [],
+      tableDataClientes: [],
+      tableColumnClientes: [],
+      tableDataUsuarios: [],
+      tableColumnUsuarios: []
     }
   },
   created() {
@@ -216,21 +261,41 @@ export default {
     submitSelectClientes(dataTree) {
       console.log('dataTreeClientes -> ', dataTree)
       this.selectClientes = dataTree
+      if (this.selectClientes.length) {
+        this.getClientes(this.selectClientes).then((res) => {
+          this.tableDataClientes = res[0]['children']
+          this.tableColumnClientes = res[0]['tablecolumns']
+        })
+      } else {
+        this.tableDataClientes = []
+        // this.tableColumnClientes = []
+      }
     },
     submitSelectUsuarios(dataTree) {
-      // console.log('dataTreeUsuarios -> ', dataTree)
+      console.log('dataTreeUsuarios -> ', dataTree)
       this.selectUsuarios = dataTree
+      if (this.selectUsuarios.length) {
+        this.getUsuarios(this.selectUsuarios).then((res) => {
+          this.tableDataUsuarios = res[0]['children']
+          this.tableColumnUsuarios = res[0]['tablecolumns']
+        })
+      } else {
+        this.tableDataUsuarios = []
+        // this.tableColumnUsuarios = []
+      }
     },
     submitSelectProductos(dataTree) {
-      console.log('dataTreeProductos -> ', dataTree)
+      // console.log('dataTreeProductos -> ', dataTree)
       this.selectProductos = dataTree
       if (this.selectProductos.length) {
         this.getProductos([0], [0], this.selectProductos).then((res) => {
           // console.log('submitSelectProductos -> ', res)
           this.tableDataProductos = res[0]['children']
+          this.tableColumnProductos = res[0]['tablecolumns']
         })
       } else {
         this.tableDataProductos = []
+        // this.tableColumnProductos = []
       }
     },
     resetTrees() {
@@ -242,9 +307,11 @@ export default {
       this.selectProductos = []
       this.ventas = 0
       this.tableDataProductos = []
+      this.tableDataClientes = []
+      this.tableDataUsuarios = []
     },
     resize() {
-      console.log('resize')
+      // console.log('resize')
     },
     initView() {
       this.getAnos()
@@ -267,16 +334,16 @@ export default {
         this.loadMeses = false
       })
     },
-    async getClientes(usuarios) {
+    async getClientes(clientes) {
       this.loadClientes = true
       let resp = []
       const data = {
-        usuario: usuarios,
+        cliente: clientes,
         ano: this.selectAnos,
         mes: this.selectMeses
       }
       await getListClientes(data).then((response) => {
-        // console.log('LISTA CLIENTES -> ', response)
+        console.log('LISTA CLIENTES -> ', response)
         if (response[0]['children'].length) {
           resp = response
         }
@@ -284,11 +351,11 @@ export default {
       this.loadClientes = false
       return resp
     },
-    async getUsuarios(clientes) {
+    async getUsuarios(usuarios) {
       this.loadUsuarios = true
       let resp = []
       const data = {
-        cliente: clientes,
+        usuario: usuarios,
         ano: this.selectAnos,
         mes: this.selectMeses
       }
@@ -311,7 +378,6 @@ export default {
         mes: this.selectMeses,
         producto: productos
       }
-      console.log(data)
       await getListProductos(data).then((response) => {
         // console.log('LISTA PRODUCTOS -> ', response)
         if (response[0]['children'].length) {
@@ -362,8 +428,8 @@ export default {
   }
 
   .pane-container-dashboard {
+    background-color: #f7fbff;
     width: 100%;
-    background-color: #f8f4f7;
     height: 100%;
   }
 
