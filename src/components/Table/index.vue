@@ -1,24 +1,21 @@
 <template>
-  <el-row class="container-table">
-    <el-col :span="24">
-      <el-row class="pane-container-text">
-        <el-col :xs="24"><label>VENTAS X {{ nametable | uppercase }}</label></el-col>
-        <el-col :xs="24" style="text-align: right;">
-          <transition name="el-zoom-in-center">
-            <el-button v-show="show" :loading="downloadLoading" style="border: 1px solid #67C23A;" size="mini" type="success" plain icon="el-icon-download" @click="handleDownload">
-              <span><b>Exportar a Excel</b></span>
-            </el-button>
-          </transition>
-        </el-col>
-      </el-row>
-    </el-col>
-    <el-col v-loading="loading" :span="24" style="border: 0px solid green; height: 85%;">
+  <el-card v-loading="loading" class="container-table">
+    <div slot="header" class="clearfix">
+      <span>Lista de {{ nametable }}s</span>
+      <transition name="el-zoom-in-center">
+        <el-button v-show="show" :loading="downloadLoading" style="float: right; padding: 3px 0;" size="small" type="text" icon="el-icon-download" @click="handleDownload">
+          <span><b>Exportar a Excel</b></span>
+        </el-button>
+      </transition>
+    </div>
+    <div style="border: 0px solid red; width: 100%;" :style="{ height: x.matches ? '15em' : '40vh' }">
+      <div v-if="!tablecolumns.length" class="msg-not-data">Sin Datos</div>
       <transition name="el-fade-in-linear">
         <el-table
           v-show="!loading && tablecolumns.length"
           ref="tableComponent"
           :data="datatable"
-          height="96%"
+          height="100%"
           border
           show-summary
           :summary-method="getSummaries"
@@ -34,7 +31,7 @@
             :key="column.label"
             :label="column.label"
             :prop="column.prop"
-            :width="x.matches ? column.width_xs : column.width"
+            :width="x.matches && !landscape.matches ? column.width_xs : column.width"
             align="center"
             sortable
           >
@@ -47,9 +44,8 @@
           </el-table-column>
         </el-table>
       </transition>
-      <div v-if="!tablecolumns.length" class="msg-not-data"><div>Sin Datos</div></div>
-    </el-col>
-  </el-row>
+    </div>
+  </el-card>
 </template>
 
 <script>
@@ -99,12 +95,21 @@ export default {
   },
   created() {
     this.x = window.matchMedia('(max-width: 800px)')
+    this.landscape = window.matchMedia('(orientation: landscape)')
   },
   methods: {
     handleSelectionChange(val) {
       // console.log('handleSelectionChange -> ', val)
+      const arrayIds = []
+      for (const iterator of val) {
+        arrayIds.push(iterator.id)
+      }
       if (val.length) {
         this.multipleSelection = val
+        this.$emit('tableids', arrayIds)
+      } else {
+        this.multipleSelection = []
+        this.$emit('tableids', [])
       }
     },
     handleDownload() {
@@ -185,9 +190,9 @@ export default {
   .container-table {
     width: 100%;
     height: 100%;
-    box-shadow: 1px 1px 4px 1px #DCDFE6;
-    border: 1px solid #F2F6FC;
-    border-radius: 4px;
+    /* box-shadow: 1px 1px 4px 1px #DCDFE6; */
+    border: 0px solid blue;
+    /* border-radius: 4px; */
   }
 
   .pane-container-text {
@@ -205,7 +210,7 @@ export default {
   .msg-not-data {
     border: 0px solid red;
     background: white;
-    color: #C0C4CC;
+    color: #909399;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -215,9 +220,10 @@ export default {
   }
 
   .table-class {
+    /* border: 10px solid blue; */
     z-index: 0;
     width: 100%;
-    border: 1px solid #F2F6FC;
+    border: 10px solid #F2F6FC;
     border-radius: 0px 0px 4px 4px;
   }
 

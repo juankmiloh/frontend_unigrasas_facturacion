@@ -2,11 +2,11 @@
 /* eslint-disable */
 import request from '@/utils/request';
 
-export function getListProcesosEmpresa(idservicio) {
+export function getListProductoCliente(data) {
     return request({
-        url: '/procesos_empresa',
-        method: 'get',
-        params: { 'idservicio': idservicio }
+        url: '/cliente_producto',
+        method: 'post',
+        data
     });
 }
 

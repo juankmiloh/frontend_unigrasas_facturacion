@@ -1,22 +1,20 @@
 <template>
-  <el-row style="border: 0px solid red; height: 100%;">
-    <el-col :span="24" class="pane-tree-options">
-      <div class="pane-fixed-options">
-        <div class="pane-text-options">
-          <label>{{ nametree | uppercase }}</label>
-        </div>
-        <el-input
-          v-if="datatree.length"
-          v-model="filterText"
-          placeholder="Buscar"
-          prefix-icon="el-icon-search"
-        />
+  <el-row style="height: 100%; overflow: auto; background: #f7d9cd;" :style="{ borderRight: nametree === 'año' ? '1px solid #606266' : '' }">
+    <el-col :span="24" class="pane-fixed-options">
+      <div class="pane-text-options">
+        <label>{{ nametree | uppercase }}</label>
       </div>
+      <el-input
+        v-if="datatree.length"
+        v-model="filterText"
+        size="mini"
+        placeholder="Buscar"
+        prefix-icon="el-icon-search"
+      />
     </el-col>
-    <el-col :span="24" style="height: 100%; background: #f7d9cd;">
+    <el-col v-loading="loading" :span="24" style="border: 0px solid; height: 100%;">
       <el-tree
         ref="tree"
-        v-loading="loading"
         :data="datatree"
         show-checkbox
         node-key="id"
@@ -136,12 +134,8 @@ export default {
 </script>
 
 <style scoped>
-  .pane-tree-options {
-    background-color: #f7d9cd;
-    width: 100%;
-  }
-
   .pane-fixed-options {
+    background: #f7d9cd;
     z-index: 1;
     position: -webkit-sticky;
     position: sticky;
@@ -150,16 +144,14 @@ export default {
 
   .pane-text-options {
     padding: 4px;
-    border: 1px solid #4CAF50;
+    border: 0px solid #4CAF50;
     text-align: center;
     background: #303133;
     color: white;
   }
 
   .tree-class {
-    z-index: 1;
+    z-index: 0;
     background: #f7d9cd;
-    height: 100%;
-    overflow: auto;
   }
 </style>

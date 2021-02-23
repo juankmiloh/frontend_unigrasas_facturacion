@@ -1,233 +1,216 @@
 <template>
-  <div class="components-container">
-    <split-pane split="vertical" :min-percent="0" :default-percent="74" @resize="resize">
-      <template slot="paneL">
-        <div style="border: 2px solid #53a6ac; height: 100%;">
-          <split-pane split="horizontal" :min-percent="5" :default-percent="50" @resize="resize">
-            <template slot="paneL">
-              <div style="height: 100%;">
-                <split-pane split="horizontal" :min-percent="5" :default-percent="45">
-                  <template slot="paneL">
-                    <div class="pane-container-dashboard">
-                      VENTAS TOTALES - ${{ ventas | formatNumber }}<br><br>
-                      Años - {{ selectAnos }} | Meses - {{ selectMeses }} <br><br>
-                      Clientes - {{ selectClientes }} <br><br>
-                      Usuarios - {{ selectUsuarios }} <br><br>
-                      Productos - {{ selectProductos }} <br><br>
-                    </div>
-                  </template>
-                  <template slot="paneR">
-                    <div class="pane-container-dashboard">
-                      <div style="height: 100%;">
-                        <split-pane split="vertical" :min-percent="0" :default-percent="65">
-                          <template slot="paneL">
-                            <div class="pane-container-dashboard" style="padding: 10px;">
-                              <table-productos
-                                nametable="producto"
-                                :datatable="tableDataProductos"
-                                :tablecolumns="tableColumnProductos"
-                                :loading="loadProductos"
-                              />
-                            </div>
-                          </template>
-                          <template slot="paneR">
-                            <div class="pane-container-dashboard">
-                              <label>Gráfica</label>
-                            </div>
-                          </template>
-                        </split-pane>
-                      </div>
-                    </div>
-                  </template>
-                </split-pane>
-              </div>
-            </template>
-            <template slot="paneR">
-              <div style="height: 100%;">
-                <split-pane split="horizontal" :min-percent="5" :default-percent="50">
-                  <template slot="paneL">
-                    <div class="pane-container-dashboard">
-                      <div style="height: 100%;">
-                        <split-pane split="vertical" :min-percent="0" :default-percent="65">
-                          <template slot="paneL">
-                            <div class="pane-container-dashboard" style="padding: 10px;">
-                              <table-clientes
-                                nametable="cliente"
-                                :datatable="tableDataClientes"
-                                :tablecolumns="tableColumnClientes"
-                                :loading="loadClientes"
-                              />
-                            </div>
-                          </template>
-                          <template slot="paneR">
-                            <div class="pane-container-dashboard">
-                              <label>Gráfica</label>
-                            </div>
-                          </template>
-                        </split-pane>
-                      </div>
-                    </div>
-                  </template>
-                  <template slot="paneR">
-                    <div class="pane-container-dashboard">
-                      <div style="height: 100%;">
-                        <split-pane split="vertical" :min-percent="0" :default-percent="65">
-                          <template slot="paneL">
-                            <div class="pane-container-dashboard" style="padding: 10px;">
-                              <table-usuarios
-                                nametable="vendedor"
-                                :datatable="tableDataUsuarios"
-                                :tablecolumns="tableColumnUsuarios"
-                                :loading="loadUsuarios"
-                              />
-                            </div>
-                          </template>
-                          <template slot="paneR">
-                            <div class="pane-container-dashboard">
-                              <label>Gráfica</label>
-                            </div>
-                          </template>
-                        </split-pane>
-                      </div>
-                    </div>
-                  </template>
-                </split-pane>
-              </div>
-            </template>
-          </split-pane>
+  <div style="border: 0px solid green; background-color: purple;">
+    <sticky class-name="sub-navbar">
+      <div style="border: 0px solid red; text-align: right">
+        <el-button
+          style="border: 1px solid #67c23a"
+          size="medium"
+          icon="el-icon-s-tools"
+          circle
+          @click="drawer = true"
+        />
+      </div>
+    </sticky>
+    <el-row>
+      <el-col :xs="24" :sm="24" :md="24" style="border: 1px solid yellow; background-color: #f7fbff;">
+        <div>
+          VENTAS TOTALES - ${{ ventas | formatNumber }}<br><br>
+          Años - {{ selectAnos }} | Meses - {{ selectMeses }} <br><br>
+          Clientes - {{ selectClientes }} <br><br>
+          Usuarios - {{ selectUsuarios }} <br><br>
+          Productos - {{ selectProductos }} <br><br>
         </div>
-      </template>
-      <template slot="paneR">
-        <div style="border: 0px solid #53a6ac; height: 100%;">
-          <split-pane split="horizontal" @resize="resize">
-            <template slot="paneL">
-              <div style="height: 100%;">
-                <split-pane split="horizontal">
-                  <template slot="paneL">
-                    <div style="height: 100%;">
-                      <split-pane split="vertical" :min-percent="0" :default-percent="50">
-                        <template slot="paneL">
-                          <div class="pane-container-dashboard">
-                            <tree-anos
-                              :datatree="listaAnos"
-                              nametree="año"
-                              :loading="loadAnos"
-                              @selected="submitSelectAnos"
-                            />
-                          </div>
-                        </template>
-                        <template slot="paneR">
-                          <div class="pane-container-dashboard">
-                            <tree-meses
-                              :datatree="listaMeses"
-                              nametree="mes"
-                              :loading="loadMeses"
-                              @selected="submitSelectMeses"
-                            />
-                          </div>
-                        </template>
-                      </split-pane>
-                    </div>
-                  </template>
-                  <template slot="paneR">
-                    <div class="pane-container-dashboard">
-                      <tree-productos
-                        :datatree="listaProductos"
-                        nametree="productos"
-                        :loading="loadProductos"
-                        @selected="submitSelectProductos"
-                      />
-                    </div>
-                  </template>
-                </split-pane>
+      </el-col>
+    </el-row>
+    <!-- <el-row style="border: 0px solid; height: 56vh;">
+      <el-col :xs="24" :sm="24" :md="24" class="pane-container-text">
+        <label>VENTAS X PRODUCTO</label>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="13" style="border: 0px solid red; padding: 14px; height: 100%; background-color: #f7fbff;">
+        <table-productos
+          nametable="producto"
+          :datatable="tableDataProductos"
+          :tablecolumns="tableColumnProductos"
+          :loading="loadProductos"
+        />
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="11" style="border: 0px solid yellow; height: 100%; padding: 14px; background-color: #f7fbff;">
+        <el-card style="height: 100%;">
+          <div slot="header" class="clearfix">
+            <span>Detalle</span>
+          </div>
+          <div style="border: 0px solid; height: 100%;">
+            <pie-chart-clientes :chart-data="pieChartClientes" />
+          </div>
+        </el-card>
+      </el-col>
+    </el-row> -->
+    <el-row :style="{ height: x.matches ? '23em' : '56vh' }">
+      <el-col :xs="24" :sm="24" :md="24" class="pane-container-text">
+        <label>VENTAS X CLIENTE</label>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="13" style="border: 0px solid red; padding: 14px; height: 100%; background-color: #f7fbff;">
+        <table-clientes
+          nametable="cliente"
+          :datatable="tableDataClientes"
+          :tablecolumns="tableColumnClientes"
+          :loading="loadClientes"
+          @tableids="selectTableCliente"
+        />
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="11" style="border: 0px solid yellow; height: 100%; padding: 14px; background-color: #f7fbff;">
+        <el-card style="height: 100%;">
+          <div slot="header" class="clearfix">
+            <span>Detalle productos cliente</span>
+          </div>
+          <div v-loading="loadPieClientes" style="border: 0px solid; height: 100%;">
+            <pie-chart-clientes v-if="pieClientes" :chart-data="pieChartClientes" />
+            <div v-else class="msg-not-data">Sin Datos</div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <!-- Drawer opciones -->
+    <el-drawer
+      title="I am the title"
+      :visible.sync="drawer"
+      :with-header="false"
+      show-close
+      :size="x.matches ? '90%' : '35%'"
+    >
+      <div style="border: 0px solid red; height: 100vh; overflow: auto; background: #f7d9cd;">
+        <el-row :style="{ height: x.matches ? '3em' : '6vh' }">
+          <el-col :xs="24" :md="24" style="border: 1px solid green; height: 100%;">
+            <sticky class="sub-navbar">
+              <div style="border: 0px solid red; text-align: right;">
+                <el-button
+                  style="border: 1px solid #67c23a"
+                  type="warning"
+                  size="mini"
+                  @click="drawer = false"
+                ><b>X</b></el-button>
               </div>
-            </template>
-            <template slot="paneR">
-              <div style="height: 100%;">
-                <split-pane split="horizontal">
-                  <template slot="paneL">
-                    <div class="pane-container-dashboard">
-                      <tree-clientes
-                        :datatree="listaClientes"
-                        nametree="clientes"
-                        :loading="loadClientes"
-                        @selected="submitSelectClientes"
-                      />
-                    </div>
-                  </template>
-                  <template slot="paneR">
-                    <div class="pane-container-dashboard">
-                      <tree-usuarios
-                        :datatree="listaUsuarios"
-                        nametree="vendedores"
-                        :loading="loadUsuarios"
-                        @selected="submitSelectUsuarios"
-                      />
-                    </div>
-                  </template>
-                </split-pane>
-              </div>
-            </template>
-          </split-pane>
-        </div>
-      </template>
-    </split-pane>
+            </sticky>
+          </el-col>
+        </el-row>
+        <el-row :style="{ height: x.matches ? '10em' : '22vh' }">
+          <el-col :xs="12" :md="12" style="height: 100%;">
+            <tree-anos
+              :datatree="listaAnos"
+              nametree="año"
+              :loading="loadAnos"
+              @selected="submitSelectAnos"
+            />
+          </el-col>
+          <el-col :xs="12" :md="12" style="height: 100%;">
+            <tree-meses
+              :datatree="listaMeses"
+              nametree="mes"
+              :loading="loadMeses"
+              @selected="submitSelectMeses"
+            />
+          </el-col>
+        </el-row>
+        <el-row :style="{ height: x.matches ? '10em' : '24vh' }">
+          <el-col :xs="24" :md="24" style="height: 100%;">
+            <tree-productos
+              :datatree="listaProductos"
+              nametree="productos"
+              :loading="loadProductos"
+              @selected="submitSelectProductos"
+            />
+          </el-col>
+        </el-row>
+        <el-row :style="{ height: x.matches ? '10em' : '24vh' }">
+          <el-col :xs="24" :md="24" style="height: 100%;">
+            <tree-clientes
+              :datatree="listaClientes"
+              nametree="clientes"
+              :loading="loadClientes"
+              @selected="submitSelectClientes"
+            />
+          </el-col>
+        </el-row>
+        <el-row :style="{ height: x.matches ? '10em' : '24vh' }">
+          <el-col :xs="24" :md="24" style="height: 100%;">
+            <tree-usuarios
+              :datatree="listaUsuarios"
+              nametree="vendedores"
+              :loading="loadUsuarios"
+              @selected="submitSelectUsuarios"
+            />
+          </el-col>
+        </el-row>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
 <script>
+import Sticky from '@/components/Sticky' // 粘性header组件
 import { getListAnios, getListMeses, getListClientes, getListUsuarios, getListProductos, getListVentasAno, getListVentasAnoMes } from '@/api/unigrasas/ventas'
 import treeAnos from '@/components/TreeOptions'
 import treeMeses from '@/components/TreeOptions'
 import treeClientes from '@/components/TreeOptions'
 import treeUsuarios from '@/components/TreeOptions'
 import treeProductos from '@/components/TreeOptions'
-import tableProductos from '@/components/Table'
+// import tableProductos from '@/components/Table'
 import tableClientes from '@/components/Table'
-import tableUsuarios from '@/components/Table'
+// import tableUsuarios from '@/components/Table'
+import PieChartClientes from '@/components/Charts/PieChart'
+import { getListProductoCliente } from '@/api/unigrasas/informes'
 
 export default {
   name: 'Ventas',
   components: {
-    treeAnos,
-    treeMeses,
-    treeClientes,
-    treeUsuarios,
-    treeProductos,
-    tableProductos,
-    tableClientes,
-    tableUsuarios
+    Sticky, treeAnos, treeMeses, treeClientes, treeUsuarios, treeProductos,
+    tableClientes, PieChartClientes
   },
   data() {
     return {
-      listaAnos: [],
-      listaMeses: [],
-      listaClientes: [],
-      listaUsuarios: [],
-      listaProductos: [],
-      selectAnos: [],
-      selectMeses: [],
-      selectClientes: [],
-      selectUsuarios: [],
-      selectProductos: [],
-      loadAnos: true,
-      loadMeses: false,
-      loadClientes: false,
-      loadUsuarios: false,
-      loadProductos: false,
+      listaAnos: [], listaMeses: [], listaClientes: [], listaUsuarios: [], listaProductos: [],
+      selectAnos: [], selectMeses: [], selectClientes: [], selectUsuarios: [], selectProductos: [],
+      loadAnos: true, loadMeses: false, loadClientes: false, loadUsuarios: false, loadProductos: false,
+      tableDataProductos: [], tableDataClientes: [], tableDataUsuarios: [],
+      tableColumnProductos: [], tableColumnClientes: [], tableColumnUsuarios: [],
       ventas: 0,
-      tableDataProductos: [],
-      tableColumnProductos: [],
-      tableDataClientes: [],
-      tableColumnClientes: [],
-      tableDataUsuarios: [],
-      tableColumnUsuarios: []
+      pieChartClientes: {},
+      dataPieClientes: {},
+      pieClientes: false,
+      loadPieClientes: false,
+      drawer: false,
+      x: ''
     }
   },
   created() {
+    this.x = window.matchMedia('(max-width: 800px)')
     this.initView()
   },
   methods: {
+    selectTableCliente(cliente) {
+      console.log(cliente)
+      if (cliente.length) {
+        this.loadPieClientes = true
+        this.getDataProductoCliente(cliente)
+      } else {
+        this.pieClientes = false
+        this.pieChartClientes = {}
+      }
+    },
+    async getDataProductoCliente(cliente) {
+      const data = {
+        cliente: cliente,
+        ano: this.selectAnos,
+        mes: this.selectMeses
+      }
+      await getListProductoCliente(data).then((response) => {
+        console.log('PIECHART_CLIENTES -> ', response)
+        this.dataPieClientes = response
+        this.pieChartClientes = this.dataPieClientes['pagado']
+        this.pieClientes = true
+        this.loadPieClientes = false
+      })
+    },
     submitSelectAnos(dataTree) {
       // console.log('dataTreeAnos -> ', dataTree)
       this.selectAnos = dataTree
@@ -245,21 +228,21 @@ export default {
       this.selectMeses = dataTree
       if (this.selectMeses.length) {
         this.getVentasAno([0], [0], [0])
+        this.getProductos([0], [0], [0]).then((res) => {
+          this.listaProductos = res
+        })
         this.getClientes([0]).then((res) => {
           this.listaClientes = res
         })
         this.getUsuarios([0]).then((res) => {
           this.listaUsuarios = res
         })
-        this.getProductos([0], [0], [0]).then((res) => {
-          this.listaProductos = res
-        })
       } else {
         this.resetTrees()
       }
     },
     submitSelectClientes(dataTree) {
-      console.log('dataTreeClientes -> ', dataTree)
+      // console.log('dataTreeClientes -> ', dataTree)
       this.selectClientes = dataTree
       if (this.selectClientes.length) {
         this.getClientes(this.selectClientes).then((res) => {
@@ -268,11 +251,11 @@ export default {
         })
       } else {
         this.tableDataClientes = []
-        // this.tableColumnClientes = []
+        this.tableColumnClientes = []
       }
     },
     submitSelectUsuarios(dataTree) {
-      console.log('dataTreeUsuarios -> ', dataTree)
+      // console.log('dataTreeUsuarios -> ', dataTree)
       this.selectUsuarios = dataTree
       if (this.selectUsuarios.length) {
         this.getUsuarios(this.selectUsuarios).then((res) => {
@@ -295,7 +278,7 @@ export default {
         })
       } else {
         this.tableDataProductos = []
-        // this.tableColumnProductos = []
+        this.tableColumnProductos = []
       }
     },
     resetTrees() {
@@ -311,7 +294,8 @@ export default {
       this.tableDataUsuarios = []
     },
     resize() {
-      // console.log('resize')
+      console.log('resize')
+      this.changeSize = true
     },
     initView() {
       this.getAnos()
@@ -343,7 +327,7 @@ export default {
         mes: this.selectMeses
       }
       await getListClientes(data).then((response) => {
-        console.log('LISTA CLIENTES -> ', response)
+        // console.log('LISTA CLIENTES -> ', response)
         if (response[0]['children'].length) {
           resp = response
         }
@@ -424,13 +408,34 @@ export default {
   .components-container {
     margin: 0%;
     width: 100%;
-    height: 89vh;
+    height: 100%;
   }
 
   .pane-container-dashboard {
     background-color: #f7fbff;
     width: 100%;
     height: 100%;
+  }
+
+  .pane-container-text {
+    padding: 10px 3px 3px 3px;
+    border: 0px solid #4CAF50;
+    text-align: center;
+    background: #E1835F;
+    color: white;
+    height: 2.3em;
+  }
+
+  .msg-not-data {
+    border: 0px solid red;
+    background: white;
+    color: #909399;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: small;
+    width: 100%;
+    height: 40vh;
   }
 
   /* width */
