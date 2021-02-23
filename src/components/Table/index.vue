@@ -9,8 +9,7 @@
       </transition>
     </div>
     <div style="border: 0px solid red; width: 100%;" :style="{ height: x.matches ? '15em' : '40vh' }">
-      <div v-if="!tablecolumns.length" class="msg-not-data">Sin Datos</div>
-      <transition name="el-fade-in-linear">
+      <transition v-if="!loading && tablecolumns.length" name="el-fade-in-linear">
         <el-table
           v-show="!loading && tablecolumns.length"
           ref="tableComponent"
@@ -44,6 +43,7 @@
           </el-table-column>
         </el-table>
       </transition>
+      <div v-else class="msg-not-data">Sin Datos</div>
     </div>
   </el-card>
 </template>
@@ -76,8 +76,9 @@ export default {
       multipleSelection: [],
       filename: '',
       show: false,
+      currentDate: moment(new Date()).format('DDMMYYYY'),
       x: '',
-      currentDate: moment(new Date()).format('DDMMYYYY')
+      landscape: false
     }
   },
   watch: {
@@ -133,9 +134,9 @@ export default {
             data,
             filename: `${this.nametable} - ${this.currentDate}`
           })
-          this.$refs.tableComponent.clearSelection()
+          // this.$refs.tableComponent.clearSelection()
           this.downloadLoading = false
-          this.multipleSelection = []
+          // this.multipleSelection = []
         })
       } else {
         this.$message({
@@ -188,6 +189,7 @@ export default {
 
 <style scoped>
   .container-table {
+    z-index: 0;
     width: 100%;
     height: 100%;
     /* box-shadow: 1px 1px 4px 1px #DCDFE6; */
@@ -223,7 +225,7 @@ export default {
     /* border: 10px solid blue; */
     z-index: 0;
     width: 100%;
-    border: 10px solid #F2F6FC;
+    border: 1px solid #F2F6FC;
     border-radius: 0px 0px 4px 4px;
   }
 

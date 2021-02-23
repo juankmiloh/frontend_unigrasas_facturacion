@@ -314,17 +314,17 @@ export const asyncRoutes = [{
             //             // if do not set roles, means: this page does not require permission
             //     }
             // },
-            {
-                path: 'pactivos',
-                component: () =>
-                    import ('@/views/informe/index'),
-                name: 'procesos_activos',
-                meta: {
-                    title: 'Facturación',
-                    icon: 'clipboard',
-                    roles: ['administrador', 'vendedor', 'consulta']
-                }
-            },
+            // {
+            //     path: 'pactivos',
+            //     component: () =>
+            //         import ('@/views/informe/index'),
+            //     name: 'procesos_activos',
+            //     meta: {
+            //         title: 'Facturación',
+            //         icon: 'clipboard',
+            //         roles: ['administrador', 'vendedor', 'consulta']
+            //     }
+            // },
             {
                 path: 'ventas',
                 component: () =>
