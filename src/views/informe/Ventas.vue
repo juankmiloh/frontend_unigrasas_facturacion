@@ -1,5 +1,5 @@
 <template>
-  <div style="border: 0px solid green; background-color: purple">
+  <div style="border: 0px solid green; background-color: #f7fbff">
     <sticky class-name="sub-navbar">
       <div style="border: 0px solid red; text-align: right">
         <el-button
@@ -65,11 +65,11 @@
           namepie="producto"
           :piedata="pieChartProductos"
           :loadpiedata="loadPieProductos"
-          title="Productos"
+          title="Clientes X Producto"
         />
       </el-col>
     </el-row>
-    <el-row :style="{ height: x.matches ? '23em' : '56vh' }">
+    <el-row style="z-index: 1;" :style="{ height: x.matches ? '23em' : '56vh' }">
       <el-col :xs="24" :sm="24" :md="24" class="pane-container-text">
         <label>VENTAS X CLIENTE</label>
       </el-col>
@@ -179,7 +179,7 @@ import tableUsuarios from '@/components/Table'
 import PieChartProductos from '@/components/CardPieChart'
 import PieChartClientes from '@/components/CardPieChart'
 import pieChartUsuarios from '@/components/CardPieChart'
-import { getListProductoCliente } from '@/api/unigrasas/informes'
+import { getListClienteProducto, getListProductoCliente, getListClienteVendedor } from '@/api/unigrasas/informes'
 
 export default {
   name: 'Ventas',
@@ -229,6 +229,12 @@ export default {
     },
     selectTableProducto(producto) {
       console.log(producto)
+      if (producto.length) {
+        this.loadPieProductos = true
+        this.getDataClienteProducto(producto)
+      } else {
+        this.pieChartProductos = {}
+      }
     },
     selectTableCliente(cliente) {
       if (cliente.length) {
@@ -240,6 +246,24 @@ export default {
     },
     selectTableUsuario(vendedor) {
       console.log(vendedor)
+      if (vendedor.length) {
+        this.loadPieUsuarios = true
+        this.getDataClienteVendedor(vendedor)
+      } else {
+        this.pieChartUsuarios = {}
+      }
+    },
+    async getDataClienteProducto(producto) {
+      const data = {
+        producto: producto,
+        ano: this.selectAnos,
+        mes: this.selectMeses
+      }
+      await getListClienteProducto(data).then((response) => {
+        // console.log(response)
+        this.pieChartProductos = response
+        this.loadPieProductos = false
+      })
     },
     async getDataProductoCliente(cliente) {
       const data = {
@@ -248,8 +272,20 @@ export default {
         mes: this.selectMeses
       }
       await getListProductoCliente(data).then((response) => {
-        this.pieChartClientes = response['pagado']
+        this.pieChartClientes = response
         this.loadPieClientes = false
+      })
+    },
+    async getDataClienteVendedor(usuario) {
+      const data = {
+        usuario: usuario,
+        ano: this.selectAnos,
+        mes: this.selectMeses
+      }
+      await getListClienteVendedor(data).then((response) => {
+        // console.log(response)
+        this.pieChartUsuarios = response
+        this.loadPieUsuarios = false
       })
     },
     getVentas(val) {
