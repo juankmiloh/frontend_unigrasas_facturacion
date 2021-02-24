@@ -231,7 +231,6 @@ export default {
       console.log(producto)
     },
     selectTableCliente(cliente) {
-      console.log(cliente)
       if (cliente.length) {
         this.loadPieClientes = true
         this.getDataProductoCliente(cliente)
@@ -268,6 +267,7 @@ export default {
     },
     async selectTreeProducto(dataTree) {
       // console.log('dataTreeProductos -> ', dataTree)
+      this.pieChartProductos = {}
       this.selectProductos = dataTree
       if (Object.entries(dataTree).length) {
         this.tableDataProductos = dataTree['children']
@@ -282,6 +282,7 @@ export default {
     },
     selectTreeCliente(dataTree) {
       // console.log('dataTreeClientes -> ', dataTree)
+      this.pieChartClientes = {}
       this.selectClientes = dataTree
       if (Object.entries(dataTree).length) {
         this.tableDataClientes = dataTree['children']
@@ -297,6 +298,7 @@ export default {
     },
     selectTreeUsuario(dataTree) {
       // console.log('dataTreeUsuarios -> ', dataTree)
+      this.pieChartUsuarios = {}
       this.selectUsuarios = dataTree
       if (Object.entries(dataTree).length) {
         this.tableDataUsuarios = dataTree['children']

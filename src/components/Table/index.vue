@@ -1,5 +1,5 @@
 <template>
-  <el-card v-loading="loading" class="container-table">
+  <el-card class="container-table">
     <div slot="header" class="clearfix">
       <span>Lista de {{ nametable }}s</span>
       <transition name="el-zoom-in-center">
@@ -8,7 +8,7 @@
         </el-button>
       </transition>
     </div>
-    <div style="border: 0px solid red; width: 100%;" :style="{ height: x.matches ? '15em' : '40vh' }">
+    <div v-loading="loading" style="border: 0px solid red; width: 100%; z-index: 0;" :style="{ height: x.matches ? '15em' : '40vh' }">
       <transition v-if="!loading && tablecolumns.length" name="el-fade-in-linear">
         <el-table
           v-show="!loading && tablecolumns.length"
@@ -189,7 +189,7 @@ export default {
 
 <style scoped>
   .container-table {
-    z-index: 0;
+    /* z-index: 0; */
     width: 100%;
     height: 100%;
     /* box-shadow: 1px 1px 4px 1px #DCDFE6; */
@@ -223,7 +223,7 @@ export default {
 
   .table-class {
     /* border: 10px solid blue; */
-    z-index: 0;
+    /* z-index: 0; */
     width: 100%;
     border: 1px solid #F2F6FC;
     border-radius: 0px 0px 4px 4px;

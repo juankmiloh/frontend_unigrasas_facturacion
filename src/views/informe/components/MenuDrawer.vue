@@ -3,7 +3,7 @@
     title="I am the title"
     :visible.sync="open"
     :with-header="false"
-    :size="x.matches && !landscape.matches ? '90%' : '35%'"
+    :size="x.matches && !landscape.matches ? '90%' : '30em'"
     :before-close="handleClose"
   >
     <div
