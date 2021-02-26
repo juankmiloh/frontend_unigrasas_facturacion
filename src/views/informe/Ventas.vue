@@ -27,7 +27,7 @@
         </div>
       </el-col>
     </el-row>
-    <el-row :style="{ height: x.matches ? '23em' : '56vh' }">
+    <el-row style="z-index: 2;" :style="{ height: x.matches ? '23em' : '56vh' }">
       <el-col :xs="24" :sm="24" :md="24" class="pane-container-text">
         <label>VENTAS X PRODUCTO</label>
       </el-col>
@@ -35,18 +35,14 @@
         :xs="24"
         :sm="12"
         :md="13"
-        style="
-          border: 0px solid red;
-          padding: 14px;
-          height: 100%;
-          background-color: #f7fbff;
-        "
+        class="class-table-ventas"
       >
         <table-productos
           nametable="producto"
           :datatable="tableDataProductos"
           :tablecolumns="tableColumnProductos"
           :loading="loadTableProductos"
+          heightxs="15em"
           @tableids="selectTableProducto"
         />
       </el-col>
@@ -54,18 +50,14 @@
         :xs="24"
         :sm="12"
         :md="11"
-        style="
-          border: 0px solid yellow;
-          height: 100%;
-          padding: 14px;
-          background-color: #f7fbff;
-        "
+        class="class-pie-ventas"
       >
         <pie-chart-productos
           namepie="producto"
+          title="Clientes X Producto"
           :piedata="pieChartProductos"
           :loadpiedata="loadPieProductos"
-          title="Clientes X Producto"
+          @detallePie="showDialogPie"
         />
       </el-col>
     </el-row>
@@ -77,18 +69,14 @@
         :xs="24"
         :sm="12"
         :md="13"
-        style="
-          border: 0px solid red;
-          padding: 14px;
-          height: 100%;
-          background-color: #f7fbff;
-        "
+        class="class-table-ventas"
       >
         <table-clientes
           nametable="cliente"
           :datatable="tableDataClientes"
           :tablecolumns="tableColumnClientes"
           :loading="loadTableClientes"
+          heightxs="15em"
           @tableids="selectTableCliente"
         />
       </el-col>
@@ -96,18 +84,14 @@
         :xs="24"
         :sm="12"
         :md="11"
-        style="
-          border: 0px solid yellow;
-          height: 100%;
-          padding: 14px;
-          background-color: #f7fbff;
-        "
+        class="class-pie-ventas"
       >
         <pie-chart-clientes
           namepie="cliente"
+          :title="`Productos X Cliente`"
           :piedata="pieChartClientes"
           :loadpiedata="loadPieClientes"
-          :title="`Productos X Cliente`"
+          @detallePie="showDialogPie"
         />
       </el-col>
     </el-row>
@@ -119,18 +103,14 @@
         :xs="24"
         :sm="12"
         :md="13"
-        style="
-          border: 0px solid red;
-          padding: 14px;
-          height: 100%;
-          background-color: #f7fbff;
-        "
+        class="class-table-ventas"
       >
         <table-usuarios
-          nametable="usuario"
+          nametable="vendedore"
           :datatable="tableDataUsuarios"
           :tablecolumns="tableColumnUsuarios"
           :loading="loadTableUsuarios"
+          heightxs="15em"
           @tableids="selectTableUsuario"
         />
       </el-col>
@@ -138,22 +118,20 @@
         :xs="24"
         :sm="12"
         :md="11"
-        style="
-          border: 0px solid yellow;
-          height: 100%;
-          padding: 14px;
-          background-color: #f7fbff;
-        "
+        class="class-pie-ventas"
       >
         <pie-chart-usuarios
-          namepie="usuario"
+          namepie="vendedor"
+          title="Clientes X Vendedor"
           :piedata="pieChartUsuarios"
           :loadpiedata="loadPieUsuarios"
-          title="Clientes X Vendedor"
+          @detallePie="showDialogPie"
         />
       </el-col>
     </el-row>
+
     <!-- Drawer opciones -->
+
     <drawer-options
       :open="drawer"
       @statusDrawer="handleDrawer"
@@ -167,12 +145,23 @@
       @loadingUsuario="loadUsuario"
       @vendedor="selectTreeUsuario"
     />
+
+    <!-- Cuadro de dialogo para mostrar detalle del piechart -->
+
+    <dialog-pie
+      :visible="dialogPieVisible"
+      :dialogdata="dataPieDialog"
+      :dialogcolumns="columnsPieDialog"
+      :title="pieSelectTitle"
+      @closeDialogPie="handleDialogPie"
+    />
   </div>
 </template>
 
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
 import DrawerOptions from './components/MenuDrawer'
+import DialogPie from './components/DialogPie'
 import tableProductos from '@/components/Table'
 import tableClientes from '@/components/Table'
 import tableUsuarios from '@/components/Table'
@@ -191,7 +180,8 @@ export default {
     tableUsuarios,
     PieChartProductos,
     PieChartClientes,
-    pieChartUsuarios
+    pieChartUsuarios,
+    DialogPie
   },
   data() {
     return {
@@ -217,6 +207,11 @@ export default {
       loadPieUsuarios: false,
       ventas: 0,
       drawer: false,
+      dialogPieVisible: false,
+      pieSelect: '',
+      pieSelectTitle: '',
+      dataPieDialog: [],
+      columnsPieDialog: [],
       x: ''
     }
   },
@@ -224,11 +219,32 @@ export default {
     this.x = window.matchMedia('(max-width: 800px)')
   },
   methods: {
+    showDialogPie(val) {
+      this.pieSelect = val.pieSelect
+      this.pieSelectTitle = val.pieTitle
+      this.dialogPieVisible = val.showDialog
+      let dataPie = []
+      let columnsPie = []
+      if (this.pieSelect === 'producto') {
+        dataPie = this.pieChartProductos.data
+        columnsPie = this.pieChartProductos.columns
+      } else if (this.pieSelect === 'cliente') {
+        dataPie = this.pieChartClientes.data
+        columnsPie = this.pieChartClientes.columns
+      } else if (this.pieSelect === 'vendedor') {
+        dataPie = this.pieChartUsuarios.data
+        columnsPie = this.pieChartUsuarios.columns
+      }
+      this.dataPieDialog = dataPie
+      this.columnsPieDialog = columnsPie
+    },
+    handleDialogPie(val) {
+      this.dialogPieVisible = val
+    },
     handleDrawer(val) {
       this.drawer = val
     },
     selectTableProducto(producto) {
-      console.log(producto)
       if (producto.length) {
         this.loadPieProductos = true
         this.getDataClienteProducto(producto)
@@ -245,7 +261,6 @@ export default {
       }
     },
     selectTableUsuario(vendedor) {
-      console.log(vendedor)
       if (vendedor.length) {
         this.loadPieUsuarios = true
         this.getDataClienteVendedor(vendedor)
@@ -260,7 +275,6 @@ export default {
         mes: this.selectMeses
       }
       await getListClienteProducto(data).then((response) => {
-        // console.log(response)
         this.pieChartProductos = response
         this.loadPieProductos = false
       })
@@ -298,7 +312,7 @@ export default {
       this.selectMeses = dataTree
     },
     loadProducto(val) {
-      console.log('loadProducto -> ', val)
+      // console.log('loadProducto -> ', val)
       this.loadTableProductos = val
     },
     async selectTreeProducto(dataTree) {
@@ -329,7 +343,7 @@ export default {
       }
     },
     loadUsuario(val) {
-      console.log('loadUsuario -> ', val)
+      // console.log('loadUsuario -> ', val)
       this.loadTableUsuarios = val
     },
     selectTreeUsuario(dataTree) {
@@ -368,5 +382,19 @@ export default {
   background: #e1835f;
   color: white;
   height: 2.3em;
+}
+
+.class-table-ventas {
+  border: 0px solid red;
+  padding: 14px;
+  height: 100%;
+  background-color: #f7fbff;
+}
+
+.class-pie-ventas {
+  border: 0px solid yellow;
+  height: 100%;
+  padding: 14px;
+  background-color: #f7fbff;
 }
 </style>

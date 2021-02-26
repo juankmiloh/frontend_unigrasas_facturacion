@@ -1,13 +1,14 @@
 <template>
-  <el-card style="height: 100%">
+  <el-card style="height: 100%;">
     <div slot="header" class="clearfix">
       <span>{{ title }}</span>
       <transition name="el-zoom-in-center">
         <el-button
           v-show="show"
-          style="float: right; padding: 3px 0"
+          style="float: right; padding: 3px 0;"
           size="small"
           type="text"
+          @click="$emit('detallePie', { 'pieSelect': namepie, 'pieTitle': title, 'showDialog': true})"
         >
           <span><b>Ver detalle ></b></span>
         </el-button>
@@ -34,6 +35,10 @@ export default {
     loadpiedata: {
       type: Boolean,
       default: false
+    },
+    namepie: {
+      type: String,
+      default: ''
     },
     title: {
       type: String,

@@ -3,12 +3,12 @@
     <div slot="header" class="clearfix">
       <span>Lista de {{ nametable }}s</span>
       <transition name="el-zoom-in-center">
-        <el-button v-show="show" :loading="downloadLoading" style="float: right; padding: 3px 0;" size="small" type="text" icon="el-icon-download" @click="handleDownload">
+        <el-button v-show="show || datatable.length" :loading="downloadLoading" style="float: right; padding: 3px 0;" size="small" type="text" icon="el-icon-download" @click="handleDownload">
           <span><b>Exportar a Excel</b></span>
         </el-button>
       </transition>
     </div>
-    <div v-loading="loading" style="border: 0px solid red; width: 100%; z-index: 0;" :style="{ height: x.matches ? '15em' : '40vh' }">
+    <div v-loading="loading" style="border: 0px solid red; width: 100%; z-index: 0;" :style="{ height: x.matches ? heightxs : '40vh' }">
       <transition v-if="!loading && tablecolumns.length" name="el-fade-in-linear">
         <el-table
           v-show="!loading && tablecolumns.length"
@@ -67,6 +67,10 @@ export default {
     nametable: {
       type: String,
       default: null
+    },
+    heightxs: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -113,31 +117,28 @@ export default {
         this.$emit('tableids', [])
       }
     },
-    handleDownload() {
+    async handleDownload() {
       // console.log(this.multipleSelection)
       if (this.multipleSelection.length) {
         this.downloadLoading = true
-        import('@/vendor/Export2Excel').then(excel => {
-          let tHeader = []
-          let filterVal = []
-          if (this.nametable === 'producto') {
-            tHeader = ['Nombre', 'Cantidad', 'Total', 'Promedio']
-            filterVal = ['label', 'cantidad', 'total', 'precio']
-          } else {
-            tHeader = ['Nombre', 'Cantidad', 'Total']
-            filterVal = ['label', 'cantidad', 'total']
+        await import('@/vendor/Export2Excel').then(async excel => {
+          const tHeader = []
+          const filterVal = []
+          for (const iterator of this.tablecolumns) {
+            tHeader.push(iterator.label)
+            filterVal.push(iterator.prop)
           }
           const list = this.multipleSelection
           const data = this.formatJson(filterVal, list)
-          excel.export_json_to_excel({
+          await excel.export_json_to_excel({
             header: tHeader,
             data,
             filename: `${this.nametable} - ${this.currentDate}`
           })
-          // this.$refs.tableComponent.clearSelection()
-          this.downloadLoading = false
-          // this.multipleSelection = []
         })
+        // this.$refs.tableComponent.clearSelection()
+        // this.multipleSelection = []
+        this.downloadLoading = false
       } else {
         this.$message({
           message: `Seleccione al menos un ${this.nametable}`,
@@ -158,20 +159,24 @@ export default {
             return
           }
           if (column.property !== 'precio') {
-            const values = data.map(item => Number(item[column.property]))
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr)
-                if (!isNaN(value)) {
-                  return prev + curr
+            if (column.property !== 'id') {
+              const values = data.map(item => Number(item[column.property]))
+              if (!values.every(value => isNaN(value))) {
+                sums[index] = values.reduce((prev, curr) => {
+                  const value = Number(curr)
+                  if (!isNaN(value)) {
+                    return prev + curr
+                  } else {
+                    return prev
+                  }
+                }, 0)
+                if (column.property === 'total') {
+                  sums[index] = '$ ' + new Intl.NumberFormat('de-DE').format(sums[index])
                 } else {
-                  return prev
+                  sums[index] = new Intl.NumberFormat('de-DE').format(sums[index])
                 }
-              }, 0)
-              if (column.property === 'total') {
-                sums[index] = '$ ' + new Intl.NumberFormat('de-DE').format(sums[index])
               } else {
-                sums[index] = new Intl.NumberFormat('de-DE').format(sums[index])
+                sums[index] = 'N/A'
               }
             } else {
               sums[index] = 'N/A'
