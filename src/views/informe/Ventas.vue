@@ -11,20 +11,32 @@
         />
       </div>
     </sticky>
-    <el-row>
-      <el-col
-        :xs="24"
-        :sm="24"
-        :md="24"
-        style="border: 1px solid yellow; background-color: #f7fbff"
-      >
-        <div>
-          VENTAS TOTALES - ${{ ventas | formatNumber }}<br><br>
-          Años - {{ selectAnos }} | Meses - {{ selectMeses }} <br><br>
-          <!-- Clientes - {{ selectClientes }} <br><br>
-          Usuarios - {{ selectUsuarios }} <br><br>
-          Productos - {{ selectProductos }} <br><br> -->
-        </div>
+    <el-row style="border: 1px solid yellow; padding: 14px; background-color: #f7fbff">
+      <el-col :xs="24" :sm="24" :md="24" class="cont-barchart-ventas">
+        <el-card>
+          <div slot="header" class="clearfix">
+            <el-row>
+              <el-col :sm="24" :md="12" style="padding: 4px;">
+                <el-tag type="success" style="font-size: small;"><b>VENTAS TOTALES:</b></el-tag><span style="font-size: small; color: #606266;"><b> ${{ ventas | formatNumber }}</b></span>
+              </el-col>
+              <el-col :sm="24" :md="12" :style="{ textAlign: x.matches ? '' : 'right'}" style="padding: 4px;">
+                <el-tag style="font-size: small;"><b>AÑOS:</b></el-tag><span style="font-size: small; color: #606266;"><b>{{ selectAnos }}</b></span>
+                <el-tag style="font-size: small;"><b>MESES:</b></el-tag><span style="font-size: small; color: #606266;"><b>{{ selectMeses }}</b></span>
+              </el-col>
+            </el-row>
+          </div>
+          <div style="border: 0px solid red; text-align: center;" :style="{ paddingLeft: x.matches ? '' : '20%', paddingRight: x.matches ? '' : '20%' }">
+            <bar-chart class="bar-chart" />
+            <div class="msg-not-data">
+              <el-image
+                v-show="true"
+                style="width: 40%; height: 40%"
+                :src="imgNotFound"
+                fit="contain"
+              />
+            </div>
+          </div>
+        </el-card>
       </el-col>
     </el-row>
     <el-row style="z-index: 2;" :style="{ height: x.matches ? '23em' : '56vh' }">
@@ -38,7 +50,7 @@
         class="class-table-ventas"
       >
         <table-productos
-          nametable="producto"
+          nametable="productos"
           :datatable="tableDataProductos"
           :tablecolumns="tableColumnProductos"
           :loading="loadTableProductos"
@@ -72,7 +84,7 @@
         class="class-table-ventas"
       >
         <table-clientes
-          nametable="cliente"
+          nametable="clientes"
           :datatable="tableDataClientes"
           :tablecolumns="tableColumnClientes"
           :loading="loadTableClientes"
@@ -106,7 +118,7 @@
         class="class-table-ventas"
       >
         <table-usuarios
-          nametable="vendedore"
+          nametable="vendedores"
           :datatable="tableDataUsuarios"
           :tablecolumns="tableColumnUsuarios"
           :loading="loadTableUsuarios"
@@ -122,7 +134,7 @@
       >
         <pie-chart-usuarios
           namepie="vendedor"
-          title="Clientes X Vendedor"
+          title="Clientes X Vendedores"
           :piedata="pieChartUsuarios"
           :loadpiedata="loadPieUsuarios"
           @detallePie="showDialogPie"
@@ -159,8 +171,10 @@
 </template>
 
 <script>
+import imgNotFound from '@/assets/barchart_wait.png'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import DrawerOptions from './components/MenuDrawer'
+import BarChart from '@/components/Charts/BarChart'
 import DialogPie from './components/DialogPie'
 import tableProductos from '@/components/Table'
 import tableClientes from '@/components/Table'
@@ -175,6 +189,7 @@ export default {
   components: {
     Sticky,
     DrawerOptions,
+    BarChart,
     tableProductos,
     tableClientes,
     tableUsuarios,
@@ -212,6 +227,7 @@ export default {
       pieSelectTitle: '',
       dataPieDialog: [],
       columnsPieDialog: [],
+      imgNotFound: imgNotFound,
       x: ''
     }
   },
@@ -362,6 +378,30 @@ export default {
 }
 </script>
 
+<style lang="scss">
+// Pantallas superiores a 800px (PC)
+@media screen and (min-width: 800px) {
+  .cont-barchart-ventas .el-card__body {
+    padding: 0% 0% 1% 0% !important;
+  }
+
+  .cont-barchart-ventas .bar-chart {
+    top: -10px;
+  }
+}
+
+// Pantallas inferiores a 800px (mobile)
+@media screen and (max-width: 800px) {
+  .cont-barchart-ventas .el-card__body {
+    padding: 1% 0% 0% 0% !important;
+  }
+
+  .cont-barchart-ventas .bar-chart {
+    top: -30px;
+  }
+}
+</style>
+
 <style scoped>
 .components-container {
   margin: 0%;
@@ -397,4 +437,19 @@ export default {
   padding: 14px;
   background-color: #f7fbff;
 }
+
+.msg-not-data {
+  border: 0px solid red;
+  background: white;
+  color: #909399;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  font-size: small;
+  pointer-events: none;
+  user-select: none;
+  /* width: 100%;
+  height: 90%; */
+}
+
 </style>

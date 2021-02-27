@@ -20,7 +20,7 @@
       :datatable="dialogdata"
       :tablecolumns="dialogcolumns"
       :loading="loadingTable"
-      heightxs="77vh"
+      heightxs="75vh"
       @tableids="selectTableDialog"
     />
   </el-dialog>
@@ -110,7 +110,7 @@ export default {
   }
 
   .dialog-class-pie .el-dialog__header {
-    display: none;
+    display: block;
   }
 }
 </style>

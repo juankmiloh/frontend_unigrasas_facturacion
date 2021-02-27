@@ -1,7 +1,7 @@
 <template>
   <el-card class="container-table">
     <div slot="header" class="clearfix">
-      <span>Lista de {{ nametable }}s</span>
+      <span>Listado de {{ nametable }}</span>
       <transition name="el-zoom-in-center">
         <el-button v-show="show || datatable.length" :loading="downloadLoading" style="float: right; padding: 3px 0;" size="small" type="text" icon="el-icon-download" @click="handleDownload">
           <span><b>Exportar a Excel</b></span>
@@ -43,13 +43,21 @@
           </el-table-column>
         </el-table>
       </transition>
-      <div v-else class="msg-not-data">Sin Datos</div>
+      <div v-else class="msg-not-data">
+        <el-image
+          v-show="true"
+          style="width: 100%; height: 100%"
+          :src="imgNotFound"
+          fit="contain"
+        />
+      </div>
     </div>
   </el-card>
 </template>
 
 <script>
 import moment from 'moment'
+import imgNotFound from '@/assets/not_found.png'
 export default {
   props: {
     datatable: {
@@ -82,7 +90,8 @@ export default {
       show: false,
       currentDate: moment(new Date()).format('DDMMYYYY'),
       x: '',
-      landscape: false
+      landscape: false,
+      imgNotFound: imgNotFound
     }
   },
   watch: {
@@ -224,6 +233,8 @@ export default {
     font-size: small;
     width: 100%;
     height: 90%;
+    pointer-events: none;
+    user-select: none;
   }
 
   .table-class {

@@ -308,7 +308,7 @@ export default {
         producto: productos
       }
       await getListVentasAno(data).then((response) => {
-        // console.log('LISTA VENTAS ANO -> ', response)
+        console.log('LISTA VENTAS ANO -> ', response)
         if (response.length) {
           for (const iterator of response) {
             this.ventas = iterator.venta + this.ventas

@@ -14,14 +14,26 @@
         </el-button>
       </transition>
     </div>
-    <div v-loading="load" style="border: 0px solid; height: 100%; z-index: 0;">
-      <pie-chart v-if="show" :chart-data="piedata" />
-      <div v-else class="msg-not-data">Sin Datos</div>
+    <div style="border: 0px solid; height: 100%; z-index: 0;">
+      <transition v-if="show" name="el-zoom-in-bottom">
+        <pie-chart v-show="true" :chart-data="piedata" />
+      </transition>
+      <transition v-else name="el-zoom-in-bottom">
+        <div class="msg-not-data">
+          <el-image
+            v-show="true"
+            style="width: 100%; height: 100%"
+            :src="imgNotFound"
+            fit="contain"
+          />
+        </div>
+      </transition>
     </div>
   </el-card>
 </template>
 
 <script>
+import imgNotFound from '@/assets/graph.png'
 import PieChart from '@/components/Charts/PieChart'
 export default {
   components: {
@@ -48,7 +60,8 @@ export default {
   data() {
     return {
       show: false,
-      load: false
+      load: false,
+      imgNotFound: imgNotFound
     }
   },
   watch: {
@@ -85,6 +98,8 @@ export default {
     font-size: small;
     width: 100%;
     height: 40vh;
+    pointer-events: none;
+    user-select: none;
   }
 </style>
 
