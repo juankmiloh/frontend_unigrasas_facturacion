@@ -26,6 +26,10 @@ export default {
       type: Boolean,
       default: true
     },
+    chartdata: {
+      type: Object,
+      required: true
+    },
     tamano: {
       type: Boolean,
       default: false
@@ -38,13 +42,13 @@ export default {
     }
   },
   watch: {
-    // chartData: {
-    //   deep: true,
-    //   handler(val) {
-    //     this.setOptions(val)
-    //     // console.log(val)
-    //   }
-    // }
+    chartdata: {
+      deep: true,
+      handler(val) {
+        this.setOptions(val)
+        // console.log(val)
+      }
+    }
   },
   created() {
     this.x = window.matchMedia('(max-width: 800px)')
@@ -64,11 +68,9 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-      // this.setOptions(this.chartData)
-      this.setOptions()
+      this.setOptions(this.chartdata)
     },
-    // setOptions({ title, leyenda, datos } = {}) {
-    setOptions() {
+    setOptions({ xAxis, data } = {}) {
       this.chart.setOption({
         tooltip: {
           trigger: 'axis',
@@ -85,7 +87,7 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: ['2018', '2019', '2020', '2021'],
+            data: xAxis,
             axisTick: {
               alignWithLabel: true
             }
@@ -101,7 +103,7 @@ export default {
             name: 'Ventas',
             type: 'bar',
             barWidth: '60%',
-            data: [200000000, 100000000, 300000000, 40000000]
+            data: data
           }
         ]
       })

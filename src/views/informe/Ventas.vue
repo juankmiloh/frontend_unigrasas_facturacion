@@ -25,16 +25,23 @@
               </el-col>
             </el-row>
           </div>
-          <div style="border: 0px solid red; text-align: center;" :style="{ paddingLeft: x.matches ? '' : '20%', paddingRight: x.matches ? '' : '20%' }">
-            <bar-chart class="bar-chart" />
-            <div class="msg-not-data">
+          <div style="border: 0px solid red; text-align: center; height: 100%;" :style="{ paddingLeft: x.matches ? '' : '20%', paddingRight: x.matches ? '' : '20%' }">
+            <transition v-if="ventas !== 0" name="el-zoom-in-center">
+              <bar-chart
+                v-show="true"
+                class="bar-chart"
+                :chartdata="barChartData"
+              />
+            </transition>
+            <transition v-else name="el-fade-in-linear">
               <el-image
                 v-show="true"
+                class="msg-not-data"
                 style="width: 40%; height: 40%"
                 :src="imgNotFound"
                 fit="contain"
               />
-            </div>
+            </transition>
           </div>
         </el-card>
       </el-col>
@@ -228,6 +235,7 @@ export default {
       dataPieDialog: [],
       columnsPieDialog: [],
       imgNotFound: imgNotFound,
+      barChartData: {},
       x: ''
     }
   },
@@ -319,7 +327,19 @@ export default {
       })
     },
     getVentas(val) {
-      this.ventas = val
+      // console.log('devuelve ventas -> ', val)
+      this.barChartData = val
+      if (val !== 0) {
+        for (let index = 0; index < val.data.length; index++) {
+          if (isNaN(val.data[index])) {
+            this.ventas = this.ventas + val.data[index].value
+          } else {
+            this.ventas = this.ventas + val.data[index]
+          }
+        }
+      } else {
+        this.ventas = 0
+      }
     },
     selectTreeAno(dataTree) {
       this.selectAnos = dataTree
@@ -439,17 +459,8 @@ export default {
 }
 
 .msg-not-data {
-  border: 0px solid red;
-  background: white;
-  color: #909399;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  font-size: small;
   pointer-events: none;
   user-select: none;
-  /* width: 100%;
-  height: 90%; */
 }
 
 </style>

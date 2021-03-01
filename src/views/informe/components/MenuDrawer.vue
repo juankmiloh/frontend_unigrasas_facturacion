@@ -299,7 +299,6 @@ export default {
       return resp
     },
     async getVentasAno(clientes, usuarios, productos) {
-      this.ventas = 0
       const data = {
         cliente: clientes,
         usuario: usuarios,
@@ -308,15 +307,22 @@ export default {
         producto: productos
       }
       await getListVentasAno(data).then((response) => {
-        console.log('LISTA VENTAS ANO -> ', response)
-        if (response.length) {
-          for (const iterator of response) {
-            this.ventas = iterator.venta + this.ventas
-            this.$emit('ventas', this.ventas)
-          }
+        // console.log('LISTA VENTAS ANO -> ', response)
+        if (Object.entries(response).length) {
+          this.$emit('ventas', response)
         } else {
           this.$emit('ventas', 0)
         }
+      }, (err) => {
+        console.log(err)
+        this.$notify({
+          title: 'Advertencia!',
+          message: 'No tiene ventas para este período',
+          position: 'top-right',
+          type: 'warning',
+          duration: 2000
+        })
+        this.$emit('ventas', 0)
       })
     },
     async getVentasAnoMes(clientes, usuarios, productos) {
