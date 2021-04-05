@@ -162,6 +162,7 @@ export default {
     modalform: {
       deep: true,
       handler(val) {
+        // console.log('Modelo agregar -> ', val)
         this.model = val
         this.loading = false
       }

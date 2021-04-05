@@ -107,6 +107,7 @@
                   type="date"
                   placeholder="Seleccione una fecha"
                   class="control-modal"
+                  @input="changeDatePago()"
                 />
               </el-form-item>
               <el-form-item label="Descripción" prop="descripcion">
@@ -351,6 +352,10 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
+    changeDatePago() {
+      console.log(this.formProceso.f_vencimiento)
+      this.formProceso.f_pago = this.formProceso.f_vencimiento
+    },
     convertNumberToLetters(val) {
       const letras = numeroALetras(val, {
         plural: 'PESOS',

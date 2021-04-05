@@ -106,7 +106,7 @@
           <!-- datos facturacion -->
           <el-col :span="11" style="border: 1px solid; border-radius: 5px; padding: 1.5%;">
             <el-row style="padding-bottom: 0.5%; border-bottom: 1px solid #606266;">
-              <el-col :span="10" style="font-size: 10.5px; color: #ff4603;"><b>FACTURA DE VENTA: </b></el-col>
+              <el-col :span="10" style="font-size: 10.5px; color: #ff4603;"><b>SALIDA DE BODEGA: </b></el-col>
               <el-col :span="14" style="font-size: 10.5px;"><b>{{ dataFactura.idfactura }}</b></el-col>
             </el-row>
             <el-row style="padding-top: 0.5%; border-bottom: 1px solid #606266;">
