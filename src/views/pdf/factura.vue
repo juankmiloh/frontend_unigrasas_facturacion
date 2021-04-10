@@ -220,7 +220,7 @@
                 </el-col>
               </el-row>
               <el-row style="padding: 1%; border-top: 1px solid;">
-                <el-col :span="24" style="border: 0px solid red; font-size: 11px; width: 52vh; height: 3vh; padding-top: 1%;">
+                <el-col :span="24" style="border: 0px solid red; font-size: 11px; width: 52vh; padding-top: 0.5%;">
                   <b>Recibido por &nbsp;&nbsp;&nbsp;_______________________________________________________</b> <br>
                   <b>N° documento</b>
                 </el-col>
