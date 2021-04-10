@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 /* eslint-disable */
-const title = 'Salida de bodega';
+const title = 'Remisión';
 
 const content = ``;
 
