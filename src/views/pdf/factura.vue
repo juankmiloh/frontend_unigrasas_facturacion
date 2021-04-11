@@ -314,10 +314,8 @@ export default {
       this.showElements = false
       this.fullscreenLoading = true
       import('./scripts/content.js').then((data) => {
-        // console.log(data)
         const { title } = data.default
-        document.title = title
-        // console.log('document -> ', document)
+        document.title = `${title} #${this.id} - ${this.dataFactura.n_cliente}`
         this.article = data.default
         setTimeout(() => {
           this.fullscreenLoading = false
