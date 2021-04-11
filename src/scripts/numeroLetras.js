@@ -163,7 +163,7 @@ export var numeroALetras = (function() {
         }
 
 
-        console.log('strMiles -> ', strMiles);
+        // console.log('strMiles -> ', strMiles);
 
         if (strMillones == '')
             return strMiles;
