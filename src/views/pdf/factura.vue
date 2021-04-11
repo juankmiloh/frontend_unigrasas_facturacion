@@ -175,7 +175,7 @@
           </el-row>
           <!-- items -->
           <el-row style="margin-top: 2%;">
-            <el-col :span="24" class="wrapper" :style="x.matches ? 'height: 25em;' : 'height: 9em;'">
+            <el-col :span="24" class="wrapper" :style="x.matches ? 'height: 38em;' : 'height: 9em;'">
               <table class="table-items">
                 <tr class="items-th">
                   <th># </th>
@@ -249,7 +249,8 @@
               </el-row>
             </el-col>
           </el-row>
-          <div v-if="key === 0" style="border-top: 1px solid #909399; border-top-style: dashed; margin-top: 2%;" />
+          <!-- Línea de corte de factura -->
+          <div v-if="key === 0" style="border-top: 1px solid #909399; border-top-style: dashed; margin-top: 2%;" :style="x.matches ? 'display: none;' : 'display: block;'" />
         </span>
       </div>
     </div>
