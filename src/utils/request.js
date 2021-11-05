@@ -2,23 +2,24 @@
 /* eslint-disable */
 import axios from 'axios';
 import { Message } from 'element-ui';
-// import store from '@/store';
-// import { getToken } from '@/utils/auth';
+import store from '@/store';
+import { getToken } from '@/utils/auth';
 
 // create an axios instance
 const service = axios.create({
     baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
     withCredentials: true, // send cookies when cross-domain requests
-    timeout: 5000 // request timeout
+    timeout: 60000 // request timeout
 });
+
+// console.log('service --> ', url);
 
 // request interceptor
 service.interceptors.request.use(
     config => {
-        // if (store.getters.token) {
-        //     config.headers['X-Token'] = getToken();
-        // }
-        // console.log('config -> ', config);
+        if (store.getters.token) {
+            config.headers['X-Token'] = getToken();
+        }
         return config;
     },
     error => {
@@ -31,7 +32,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         const res = JSON.parse(JSON.stringify(response.data));
-        // console.log('response axios -> ', response);
         return res;
     },
     error => {
@@ -39,7 +39,7 @@ service.interceptors.response.use(
         Message({
             message: error.message,
             type: 'error',
-            duration: 5 * 1000
+            duration: 6 * 10000
         });
         return Promise.reject(error);
     }
