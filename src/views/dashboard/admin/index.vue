@@ -18,9 +18,9 @@
         </el-row>
       </el-col>
     </el-row>
-    <div>
+    <!-- <div>
       <img :src="emptyGif" class="emptyGif">
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -33,7 +33,7 @@ export default {
   components: { PanThumb },
   data() {
     return {
-      emptyGif: 'https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3'
+      emptyGif: ''
     }
   },
   computed: {

@@ -24,31 +24,32 @@ module.exports = {
      * In most cases please use '/' !!!
      * Detail: https://cli.vuejs.org/config/#publicpath
      */
-    publicPath: '/',
-    outputDir: 'dist',
+    // publicPath: process.env.NODE_ENV === 'development' ? '/' : '{{url_base}}',
+    publicPath: process.env.NODE_ENV === 'development' ? '/' : 'front/dist',
+    outputDir: '../backend_unigrasas_facturacion/front/dist',
     assetsDir: 'static',
-    lintOnSave: process.env.NODE_ENV === 'development',
+    lintOnSave: process.env.NODE_ENV === 'development' ? 'error' : false,
     productionSourceMap: false,
     devServer: {
-        disableHostCheck: true,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": true
+        },
         port: port,
         open: true,
         overlay: {
             warnings: false,
             errors: true
         },
-        proxy: {
-            // change xxx-api/login => mock/login
-            // detail: https://cli.vuejs.org/config/#devserver-proxy
-            [process.env.VUE_APP_BASE_API]: {
-                target: `http://127.0.0.1:${port}/mock`,
-                changeOrigin: true,
-                pathRewrite: {
-                    ['^' + process.env.VUE_APP_BASE_API]: ''
-                }
-            }
-        },
-        after: require('./mock/mock-server.js')
+        after(app) {
+            require('@babel/register')
+            const bodyParser = require('body-parser')
+
+            app.use(bodyParser.json())
+            app.use(bodyParser.urlencoded({
+                extended: true
+            }))
+        }
     },
     configureWebpack: {
         // provide the app's title in webpack's name field, so that
@@ -93,10 +94,10 @@ module.exports = {
             .end()
 
         config
-        // https://webpack.js.org/configuration/devtool/#development
+            // https://webpack.js.org/configuration/devtool/#development
             .when(process.env.NODE_ENV === 'development',
-            config => config.devtool('cheap-source-map')
-        )
+                config => config.devtool('cheap-source-map')
+            )
 
         config
             .when(process.env.NODE_ENV !== 'development',
