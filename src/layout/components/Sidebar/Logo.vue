@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import logPage from '../../../assets/factura1.png'
+import logPage from '../../../assets/factura2024-3.svg'
 
 export default {
   name: 'SidebarLogo',
@@ -48,6 +48,7 @@ export default {
 }
 
 .sidebar-logo-container {
+  font-family: "Roboto", sans-serif !important;
   position: relative;
   width: 100%;
   height: 50px;
@@ -74,7 +75,7 @@ export default {
       font-weight: 600;
       line-height: 50px;
       font-size: 14px;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+      font-family: "Roboto", sans-serif !important;
       vertical-align: middle;
     }
   }

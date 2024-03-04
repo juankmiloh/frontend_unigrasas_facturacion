@@ -3,7 +3,7 @@
     v-el-drag-dialog
     :visible.sync="modalvisible"
     :before-close="handleCancel"
-    :width="x.matches ? '' : '40%'"
+    :width="x.matches ? '' : '34em'"
     :fullscreen="x.matches ? true : false"
     center
     custom-class="dialog-class"

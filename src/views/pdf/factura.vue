@@ -116,14 +116,14 @@
               </el-row> -->
               <el-row style="padding-top: 0.5%; border-bottom: 1px solid #606266;">
                 <el-col :span="10" style="font-size: 10.5px; color: #ff4603;"><b>Fecha </b></el-col>
-                <el-col :span="14" style="font-size: 10.5px;"><b>{{ dataFactura.f_emision }}</b></el-col>
+                <el-col :span="14" style="font-size: 10.5px;"><b>{{ formatDate(dataFactura.f_emision) }}</b></el-col>
               </el-row>
               <el-row style="padding-top: 0.5%; border-bottom: 1px solid #606266;">
                 <el-col :span="10" style="font-size: 10.5px; color: #ff4603;"><b>Forma de pago </b></el-col>
                 <el-col :span="14" style="font-size: 10.5px;"><b>{{ dataFactura.negociacion }}</b></el-col>
               </el-row>
               <el-row style="padding-top: 0.5%; border-bottom: 1px solid #606266;">
-                <el-col :span="10" style="font-size: 10.5px; color: #ff4603;"><b>VENDEDOR: </b></el-col>
+                <el-col :span="10" style="font-size: 10.5px; color: #ff4603;"><b>Vendedor </b></el-col>
                 <el-col :span="14" style="font-size: 10.5px;"><b>{{ dataFactura.vendedor }}</b></el-col>
               </el-row>
               <!-- <el-row style="padding-top: 0.5%; border-bottom: 1px solid #606266;">
@@ -294,6 +294,25 @@ export default {
     // console.log('Imprimir factura -> ', this.id)
   },
   methods: {
+    formatDate(value) {
+      if (value) {
+        // Fecha original
+        const date = new Date(value)
+
+        // Obtener día, mes y año
+        let dia = date.getDate()
+        let mes = date.getMonth() + 1 // Los meses en JavaScript van de 0 a 11, por lo que se suma 1
+        const anio = date.getFullYear()
+
+        // Formatear día, mes y año con ceros a la izquierda si es necesario
+        dia = (dia < 10 ? '0' : '') + dia
+        mes = (mes < 10 ? '0' : '') + mes
+
+        // Crear la cadena formateada
+        const fechaFormateada = dia + '/' + mes + '/' + anio
+        return fechaFormateada
+      }
+    },
     btnClose() {
       if (this.x.matches) {
         return 'X'

@@ -4,8 +4,8 @@ export const CONSTANTS = {
     tableColumnsItems: [{
             label: 'Nombre',
             prop: 'nombre',
-            width: 300,
-            width_xs: 300
+            width: 290,
+            width_xs: 290
         },
         {
             label: 'Nit',
@@ -34,8 +34,8 @@ export const CONSTANTS = {
         {
             label: 'Registro',
             prop: 'registro',
-            width: 110,
-            width_xs: 120
+            width: 120,
+            width_xs: 130
         }
     ],
     formItem: {

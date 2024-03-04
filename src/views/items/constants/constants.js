@@ -16,7 +16,7 @@ export const CONSTANTS = {
         {
             label: 'Precio',
             prop: 'precio',
-            // width: 125
+            width: 125,
             width_xs: 125
         },
         {

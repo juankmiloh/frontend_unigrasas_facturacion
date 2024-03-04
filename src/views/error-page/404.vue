@@ -10,11 +10,11 @@
       <div class="bullshit">
         <div class="bullshit__oops">OOPS!</div>
         <div class="bullshit__info">All rights reserved
-          <a style="color:#20a0ff" href="http://unigrasas.centralus.cloudapp.azure.com:9527" target="_blank">Principal</a>
+          <!-- <a style="color:#20a0ff" href="/">Principal</a> -->
         </div>
         <div class="bullshit__headline">{{ message }}</div>
         <div class="bullshit__info">Please check that the URL you entered is correct, or click the button below to return to the homepage.</div>
-        <a href="" class="bullshit__return-home">Principal</a>
+        <a href="" class="bullshit__return-home">Inicio</a>
       </div>
     </div>
   </div>

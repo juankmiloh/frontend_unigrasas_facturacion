@@ -7,7 +7,7 @@
           <img :src="logPage" alt="Page" class="imgLogPage">
         </el-col>
         <el-col :xs="20" :md="20">
-          <label class="text-logo" style="padding-left: 1%;">FACTURACIÓN</label>
+          <label class="text-logo">Facturación</label>
         </el-col>
         <!-- <el-col :xs="4" :md="3" class="cont-logo">
           <img :src="logPage1" alt="Page" class="imgLogPage">
@@ -20,7 +20,7 @@
         <div class="cont-card">
           <el-card class="box-card style-card" shadow="hover" :body-style="cardStyle">
             <div slot="header" class="clearfix" style="text-align: center;">
-              <label style="font-size: x-large; color: white;">Iniciar sesión</label>
+              <label style="font-size: x-large; color: white;">Inicia sesión</label>
             </div>
             <el-row style="border: 1px solid #f5f5f5; padding: 3% 6% 6% 6%; border-radius: 5px;">
               <el-col :xs="24" :md="24">
@@ -59,12 +59,12 @@
               </el-col>
             </el-row>
             <el-row style="border: 0px solid; padding: 6% 6% 6% 6%;">
-              <el-col class="div-btn-login" style="border: 0px solid;" :xs="24" :md="10">
-                <el-button :loading="loading" type="primary" style="width: 100%;" @click.native.prevent="handleLogin">Ingresar</el-button>
+              <el-col class="div-btn-login" style="border: 0px solid;" :xs="24" :md="24">
+                <el-button :loading="loading" type="primary" class="text-btn" style="width: 100%;" @click.native.prevent="handleLogin">INGRESAR</el-button>
               </el-col>
-              <el-col :xs="24" :md="14" class="link-password">
+              <!-- <el-col :xs="24" :md="14" class="link-password">
                 <a href="" style="color: #409EFF;">Recordar contraseña</a>
-              </el-col>
+              </el-col> -->
             </el-row>
           </el-card>
         </div>
@@ -73,7 +73,7 @@
 
     <div class="footer-login">
       <span class="textoFooter">
-        UNIGRASAS ©&nbsp;2020
+        Unigrasas ©&nbsp;2020 - 2024. Reservados todos los derechos.
       </span>
     </div>
   </el-container>
@@ -81,7 +81,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import logPage from '@/assets/factura1.png'
+import logPage from '@/assets/factura2024-2.svg'
 import { getListNicknames } from '@/api/unigrasas/usuarios'
 // import md5 from 'md5'
 import { mapGetters } from 'vuex'
@@ -93,7 +93,7 @@ export default {
       const usernameLower = value.toLowerCase()
       // console.log('usernameLower -> ', usernameLower)
       if (!validUsername(usernameLower)) {
-        callback(new Error('Por favor ingrese un usuario válido'))
+        callback(new Error('Ingrese un usuario válido'))
       } else {
         callback()
       }
@@ -101,7 +101,8 @@ export default {
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(
-          new Error('La contraseña no puede ser menor a seis caracteres')
+          // new Error('La contraseña no puede ser menor a seis caracteres')
+          new Error('Ingrese una contraseña válida')
         )
       } else {
         callback()
@@ -246,17 +247,49 @@ export default {
 </script>
 
 <style lang="scss">
-	.el-header {
+  .cont-body {
+    // font-family: "Roboto", sans-serif;
+    height: 100%;
+  }
+
+  .cont-body .el-form-item__label {
+    padding: 0 !important;
+  }
+
+  .cont-body .el-form-item__label::before {
+    content: '' !important;
+  }
+
+  .cont-body .el-form-item__error {
+    color: #EF5350;
+  }
+
+  .cont-body .el-form-item.is-error .el-input__inner {
+    border-color: #EF5350;
+  }
+
+  .cont-body .el-form-item.is-error .el-input__inner, .el-form-item.is-error .el-input__inner:focus, .el-form-item.is-error .el-textarea__inner, .el-form-item.is-error .el-textarea__inner:focus {
+    border-color: #EF5350;
+  }
+
+  .cont-body .el-card__header {
+    padding: 10px 20px;
+  }
+
+  .text-btn {
+    font-weight: 500;
+    font-style: normal;
+    background-color: #29B6F6;
+    border-color: #29B6F6;
+  }
+
+  .el-header {
 		background-color: #304156;
 		line-height: 60px;
 	}
 
   .imgLogPage {
 		height: 3em;
-	}
-
-	.cont-body {
-		height: 100%;
 	}
 
   .style-card {
@@ -293,6 +326,7 @@ export default {
     .text-logo {
       font-size: x-large;
       color: white;
+      padding-left: 1%;
     }
 
     .el-main {
