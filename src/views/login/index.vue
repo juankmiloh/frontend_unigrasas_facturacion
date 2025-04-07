@@ -1,10 +1,9 @@
 <template>
   <el-container class="cont-body">
-
     <el-header>
       <el-row :gutter="10">
         <el-col :xs="4" :md="1" class="cont-logo">
-          <img :src="logPage" alt="Page" class="imgLogPage">
+          <img :src="logPage" alt="Page" class="imgLogPage" />
         </el-col>
         <el-col :xs="20" :md="20">
           <label class="text-logo">Facturación</label>
@@ -16,7 +15,13 @@
     </el-header>
 
     <el-main>
-      <el-form ref="loginForm" label-position="top" :model="loginForm" :rules="loginRules" autocomplete="on">
+      <el-form
+        ref="loginForm"
+        label-position="top"
+        :model="loginForm"
+        :rules="loginRules"
+        autocomplete="on"
+      >
         <div class="cont-card">
           <el-card class="box-card style-card" shadow="hover" :body-style="cardStyle">
             <div slot="header" class="clearfix" style="text-align: center;">
@@ -60,7 +65,15 @@
             </el-row>
             <el-row style="border: 0px solid; padding: 6% 6% 6% 6%;">
               <el-col class="div-btn-login" style="border: 0px solid;" :xs="24" :md="24">
-                <el-button :loading="loading" type="primary" class="text-btn" style="width: 100%;" @click.native.prevent="handleLogin">INGRESAR</el-button>
+                <el-button
+                  :loading="loading"
+                  type="primary"
+                  class="text-btn"
+                  style="width: 100%;"
+                  @click.native.prevent="handleLogin"
+                >
+                  INGRESAR
+                </el-button>
               </el-col>
               <!-- <el-col :xs="24" :md="14" class="link-password">
                 <a href="" style="color: #409EFF;">Recordar contraseña</a>
@@ -73,7 +86,7 @@
 
     <div class="footer-login">
       <span class="textoFooter">
-        Unigrasas ©&nbsp;2020 - 2024. Reservados todos los derechos.
+        Unigrasas ©&nbsp;2020 - {{ new Date().getFullYear() }}. Reservados todos los derechos.
       </span>
     </div>
   </el-container>
@@ -117,12 +130,8 @@ export default {
         // password: '123456'
       },
       loginRules: {
-        username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
-        ],
-        password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -167,7 +176,7 @@ export default {
   },
   methods: {
     async getNicknames() {
-      await getListNicknames().then((response) => {
+      await getListNicknames().then(response => {
         this.listUsers = response.users
         // console.log('NICkNAMES -> ', this.listUsers)
         const result = { data: response.nicknames }
@@ -176,10 +185,7 @@ export default {
     },
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
-        if (
-          (shiftKey && key >= 'a' && key <= 'z') ||
-						(!shiftKey && key >= 'A' && key <= 'Z')
-        ) {
+        if ((shiftKey && key >= 'a' && key <= 'z') || (!shiftKey && key >= 'A' && key <= 'Z')) {
           this.capsTooltip = true
         } else {
           this.capsTooltip = false
@@ -202,13 +208,15 @@ export default {
     handleLogin() {
       // this.loginForm.password = md5(this.loginForm.password)
       // console.log('contrasena -> ', this.loginForm.password)
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$store
             .dispatch('user/login', this.loginForm)
-            .then((data) => {
-              const userLogged = this.listUsers.find(user => user.nickname === this.loginForm.username.toLowerCase()).nombre
+            .then(data => {
+              const userLogged = this.listUsers.find(
+                user => user.nickname === this.loginForm.username.toLowerCase()
+              ).nombre
               this.$notify({
                 title: `Hola ${userLogged}`,
                 message: `Se ha iniciado tu sesión exitosamente!`,
@@ -219,7 +227,7 @@ export default {
               this.loading = false
               this.loginForm.password = ''
             })
-            .catch((err) => {
+            .catch(err => {
               console.log('error login -> ', err)
               this.$notify.error({
                 title: 'Error',
@@ -247,134 +255,137 @@ export default {
 </script>
 
 <style lang="scss">
-  .cont-body {
-    // font-family: "Roboto", sans-serif;
-    height: 100%;
+.cont-body {
+  // font-family: "Roboto", sans-serif;
+  height: 100%;
+}
+
+.cont-body .el-form-item__label {
+  padding: 0 !important;
+}
+
+.cont-body .el-form-item__label::before {
+  content: '' !important;
+}
+
+.cont-body .el-form-item__error {
+  color: #ef5350;
+}
+
+.cont-body .el-form-item.is-error .el-input__inner {
+  border-color: #ef5350;
+}
+
+.cont-body .el-form-item.is-error .el-input__inner,
+.el-form-item.is-error .el-input__inner:focus,
+.el-form-item.is-error .el-textarea__inner,
+.el-form-item.is-error .el-textarea__inner:focus {
+  border-color: #ef5350;
+}
+
+.cont-body .el-card__header {
+  padding: 10px 20px;
+}
+
+.text-btn {
+  font-weight: 500;
+  font-style: normal;
+  background-color: #29b6f6;
+  border-color: #29b6f6;
+}
+
+.el-header {
+  background-color: #304156;
+  line-height: 60px;
+}
+
+.imgLogPage {
+  height: 3em;
+}
+
+.style-card {
+  border: 1px solid #304156;
+  background: #304156;
+  border-radius: 10px;
+  height: auto;
+}
+
+.footer-login {
+  background-color: #304156;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding-bottom: 0.3%;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+
+.textoFooter {
+  vertical-align: middle;
+  font-size: small;
+  font-weight: bold;
+}
+
+// Pantallas superiores a 800px (PC)
+@media screen and (min-width: 800px) {
+  .cont-logo {
+    padding-top: 0.4%;
   }
 
-  .cont-body .el-form-item__label {
-    padding: 0 !important;
+  .text-logo {
+    font-size: x-large;
+    color: white;
+    padding-left: 1%;
   }
 
-  .cont-body .el-form-item__label::before {
-    content: '' !important;
+  .el-main {
+    background-color: #e9eef3;
   }
 
-  .cont-body .el-form-item__error {
-    color: #EF5350;
+  .cont-card {
+    border: 0px solid green;
+    padding: 4.5% 36% 0% 36%; // ARRIBA / DERECHA / ABAJO / IZQUIERDA
+    height: 78vh;
+    background: #f5f5f5;
+    border-radius: 5px;
   }
 
-  .cont-body .el-form-item.is-error .el-input__inner {
-    border-color: #EF5350;
+  .link-password {
+    display: block;
+    padding-top: 0.6em;
+    padding-left: 5%;
+  }
+}
+
+// Pantallas inferiores a 800px (mobile)
+@media screen and (max-width: 800px) {
+  .cont-logo {
+    padding-top: 1%;
   }
 
-  .cont-body .el-form-item.is-error .el-input__inner, .el-form-item.is-error .el-input__inner:focus, .el-form-item.is-error .el-textarea__inner, .el-form-item.is-error .el-textarea__inner:focus {
-    border-color: #EF5350;
+  .text-logo {
+    font-size: x-large;
+    color: white;
   }
 
-  .cont-body .el-card__header {
-    padding: 10px 20px;
+  .el-main {
+    background-color: white;
   }
 
-  .text-btn {
-    font-weight: 500;
-    font-style: normal;
-    background-color: #29B6F6;
-    border-color: #29B6F6;
+  .div-btn-login {
+    text-align: center;
   }
 
-  .el-header {
-		background-color: #304156;
-		line-height: 60px;
-	}
-
-  .imgLogPage {
-		height: 3em;
-	}
-
-  .style-card {
-    border: 1px solid #304156;
-    background: #304156;
-    border-radius: 10px;
-    height: auto;
+  .cont-card {
+    border: 0px solid green;
+    padding: 10% 0% 0% 0%;
   }
 
-  .footer-login {
-		background-color: #304156;
-		position: fixed;
-		left: 0;
-		bottom: 0;
-		padding-bottom: 0.3%;
-		width: 100%;
-		color: white;
-		text-align: center;
-	}
-
-  .textoFooter {
-    vertical-align: middle;
-    cursor: pointer;
-    font-size: small;
-    font-weight: bold;
+  .link-password {
+    display: block;
+    padding-top: 5%;
+    text-align: center;
   }
-
-  // Pantallas superiores a 800px (PC)
-	@media screen and (min-width: 800px) {
-    .cont-logo {
-      padding-top: 0.4%;
-    }
-
-    .text-logo {
-      font-size: x-large;
-      color: white;
-      padding-left: 1%;
-    }
-
-    .el-main {
-      background-color: #e9eef3;
-    }
-
-    .cont-card {
-      border: 0px solid green;
-      padding: 4.5% 36% 0% 36%; // ARRIBA / DERECHA / ABAJO / IZQUIERDA
-      height: 78vh;
-      background: #f5f5f5;
-      border-radius: 5px;
-    }
-
-    .link-password {
-      display: block;
-      padding-top: 0.6em; padding-left: 5%;
-    }
-	}
-
-	// Pantallas inferiores a 800px (mobile)
-	@media screen and (max-width: 800px) {
-    .cont-logo {
-      padding-top: 1%;
-    }
-
-    .text-logo {
-      font-size: x-large;
-      color: white;
-    }
-
-    .el-main {
-      background-color: white;
-    }
-
-    .div-btn-login {
-      text-align: center;
-    }
-
-    .cont-card {
-      border: 0px solid green;
-      padding: 10% 0% 0% 0%;
-    }
-
-    .link-password {
-      display: block;
-      padding-top: 5%;
-      text-align: center;
-    }
-	}
+}
 </style>

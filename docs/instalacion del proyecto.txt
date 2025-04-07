@@ -1,0 +1,6 @@
+1. Utilizar la version v14 de node
+2. Antes de hcacer un npm i y para evitar un error critico en la instalacion de dependencias y forzar que npm use HTTPS en lugar de git:// ejecutar el siguiente comando:
+  git config --global url."https://".insteadOf git://
+3. Ejecutar el comando npm run dev para levantar el proyecto
+4. La primera vez que se ejecuta el proyecto falla, para esto terminar la ejecución en consola y volver a levantar el proyecto
+5. Ejecutar el comando npm run build:prod para cargar los cambios al backend
